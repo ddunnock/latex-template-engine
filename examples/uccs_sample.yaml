@@ -1,0 +1,62 @@
+# Sample variables for UCCS report template
+
+student_name: "David Dunnock"
+course_code: "EMGT5510"
+course_title: "Leadership for Engineers"
+instructor_name: "Dr. William Daughton"
+semester: "2025 summer"
+college_name: "College of Engineering & Applied Science"
+
+title: "Leadership Portfolio"
+subtitle: "An Introspective Analysis of Leadership Strengths, Patterns, and Growth Areas"
+date: "\\today"
+
+include_logo: false
+use_custom_fonts: false
+include_toc: true
+include_references: true
+include_appendices: true
+
+sections:
+  - title: "Introduction"
+    content: |
+      This portfolio provides a comprehensive analysis of my leadership development journey through various assessment instruments and reflective exercises. The document explores patterns across different leadership frameworks and identifies key areas for continued growth.
+
+  - title: "Overview of Leadership Instruments"
+    content: |
+      Throughout this course, I completed several validated leadership assessment tools including the Leadership Practices Inventory, Emotional Intelligence Assessment, and the Conceptualizing Leadership Questionnaire. Each instrument provided unique insights into different facets of leadership capability and style.
+
+  - title: "Patterns and Themes Across Instruments"
+    content: |
+      Analysis of results across multiple instruments reveals consistent themes in my leadership approach. This section synthesizes findings to identify core strengths and development opportunities.
+    subsections:
+      - title: "Collaborative Leadership Style"
+        content: "Results consistently indicate a preference for collaborative, relationship-focused leadership approaches."
+      - title: "Communication Strengths"
+        content: "Multiple assessments highlight strong communication and interpersonal skills as key leadership assets."
+
+  - title: "Leadership Strengths and Areas for Growth"
+    content: |
+      Based on comprehensive assessment results, this section outlines primary strengths to leverage and specific areas requiring focused development efforts.
+
+  - title: "Personal Leadership Development Plan"
+    content: |
+      A structured plan for continued leadership growth, incorporating specific goals, strategies, and assessment mechanisms for the next 12-18 months.
+
+  - title: "Conclusion"
+    content: |
+      This portfolio process has provided valuable insights into my leadership identity and trajectory. The integration of multiple assessment perspectives offers a robust foundation for continued development as an engineering leader.
+
+references:
+  - "Kouzes, J. M., & Posner, B. Z. (2017). The Leadership Challenge: How to Make Extraordinary Things Happen in Organizations. Jossey-Bass."
+  - "Goleman, D. (2006). Emotional Intelligence: Why It Matters More Than IQ. Bantam Books."
+  - "Northouse, P. G. (2021). Leadership: Theory and Practice. SAGE Publications."
+
+appendices:
+  - title: "Conceptualizing Leadership Questionnaire"
+    content: |
+      Complete results and analysis from the Conceptualizing Leadership Questionnaire, including individual responses and scoring interpretation.
+  
+  - title: "Leadership Practices Inventory Results"
+    content: |
+      Detailed LPI assessment results with comparative analysis and development recommendations.
