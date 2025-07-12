@@ -286,8 +286,8 @@ def uccs_workflow(module: str, type: str, title: str) -> None:
         return
 
     # Display template options
-    for i, template in enumerate(templates, 1):
-        console.print(f"  {i}. {template}")
+    for i, template_name in enumerate(templates, 1):
+        console.print(f"  {i}. {template_name}")
 
     while True:
         try:
@@ -301,15 +301,15 @@ def uccs_workflow(module: str, type: str, title: str) -> None:
             console.print("[red]Invalid input. Please enter a number.[/red]")
 
     # Generate document using selected template
-    template = session.engine.load_template(selected_template)
+    loaded_template = session.engine.load_template(selected_template)
 
     # Collect field values
     field_values = {}
-    if template.config and template.config.fields:
-        console.print(f"\n[bold]Template: {template.config.name}[/bold]")
-        console.print(f"Description: {template.config.description}\n")
+    if loaded_template.config and loaded_template.config.fields:
+        console.print(f"\n[bold]Template: {loaded_template.config.name}[/bold]")
+        console.print(f"Description: {loaded_template.config.description}\n")
 
-        for field in template.config.fields:
+        for field in loaded_template.config.fields:
             field_values[field.name] = session._get_field_value(field)
 
     # Generate the document

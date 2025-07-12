@@ -243,7 +243,7 @@ class AssetManager:
                 return []
 
             font_extensions = [".otf", ".ttf", ".woff", ".woff2"]
-            font_files = []
+            font_files: List[Path] = []
 
             for ext in font_extensions:
                 font_files.extend(source_dir.glob(f"*{ext}"))
@@ -290,7 +290,7 @@ class AssetManager:
                 return []
 
             image_extensions = [".png", ".jpg", ".jpeg", ".pdf", ".eps", ".svg"]
-            image_files = []
+            image_files: List[Path] = []
 
             for ext in image_extensions:
                 image_files.extend(source_dir.glob(f"*{ext}"))
