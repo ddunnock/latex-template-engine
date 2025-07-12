@@ -143,6 +143,29 @@ dmypy.json
 # Test output files
 test_output.*
 
+# User-created projects and documents
+# The projects/ directory contains user-generated LaTeX documents
+# and should not be tracked in version control
+projects/
+
+# Generated LaTeX files at root level (but not template files)
+/*.tex
+/*_vars.yaml
+/*_output.yaml
+/data.yaml
+/config.yaml
+
+# Temporary files created during development/testing
+temp/
+tmp/
+*_temp.*
+*_tmp.*
+
+# User-generated test files
+test-templates/
+my-templates/
+output/
+
 # Editor files
 .vscode/
 .idea/
