@@ -155,7 +155,7 @@ class TemplateConfig(BaseModel):
 
     # Metadata
     tags: List[str] = Field(default_factory=list, description="Template tags")
-    preview_image: Optional[str] = Field(None, description="Preview image path")
+    preview_image: Optional[str] = Field(None, description="Preview image")
 
     class Config:
         """Pydantic configuration."""

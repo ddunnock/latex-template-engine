@@ -100,7 +100,8 @@ class TemplateEngine:
 
         # Check if template file exists
         if not template_path.exists():
-            raise FileNotFoundError(f"Template {template_name}.tex.j2 not found")
+            msg = f"Template {template_name}.tex.j2 not found"
+            raise FileNotFoundError(msg)
 
         # Load Jinja2 template
         jinja_template = self.env.get_template(f"{template_name}.tex.j2")

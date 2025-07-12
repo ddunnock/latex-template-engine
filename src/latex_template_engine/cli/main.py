@@ -332,7 +332,8 @@ def init(template_dir: Optional[Path]):
     config_file.write_text(example_config.model_dump_yaml())
 
     # Confirm creation with console output
-    console.print(f"[green]Initialized template directory: {template_dir}[/green]")
+    msg = f"[green]Initialized template directory: {template_dir}[/green]"
+    console.print(msg)
     template_file = template_dir / "example.tex.j2"
     console.print(f"[dim]Created example template: {template_file}[/dim]")
     console.print(f"[dim]Created example config: {config_file}[/dim]")
