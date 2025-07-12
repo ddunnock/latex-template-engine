@@ -60,7 +60,7 @@ jobs:
       run: |
         poetry run latex-engine --help
         poetry run latex-engine list-templates
-        poetry run latex-engine info uccs_report
+        poetry run latex-engine info example
 
   build:
     needs: test
