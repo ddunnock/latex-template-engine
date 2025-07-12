@@ -10,7 +10,7 @@ A modern LaTeX template engine with Jinja2 templating that simplifies creating a
 
 ## ✨ Features
 
-### Current (v0.2.0)
+### Current (v0.3.0)
 - ✅ **Core Template Engine**: Full Jinja2 integration with LaTeX-optimized delimiters
 - ✅ **Interactive CLI**: Guided document creation perfect for LaTeX novices
 - ✅ **CLI Interface**: Complete command-line tool for template management and document generation
@@ -18,6 +18,9 @@ A modern LaTeX template engine with Jinja2 templating that simplifies creating a
 - ✅ **Configuration Schema**: Pydantic-based validation for template configurations
 - ✅ **Rich Output**: Beautiful formatted CLI output with tables and colors
 - ✅ **Type Safety**: Full mypy type checking for robust development
+  - ✅ **Project Management**: Automated asset link creation and seamless organization
+   - ✅ **Structured Workflows**: New command `uccs-workflow` for structured document creation
+   - ✅ **Direct Compilation**: Compile `.tex` files directly with `compile` command
 
 ### Planned
 - 🔄 Neovim plugin with graphical interface
@@ -37,6 +40,10 @@ cd latex-template-engine
 
 # Install with Poetry (recommended)
 poetry install
+# Install pre-commit hooks
+poetry run pre-commit install
+
+# Activate the virtual environment
 poetry shell
 
 # Or install with pip (development mode)
@@ -49,6 +56,9 @@ pip install -e .
 # Interactive mode (recommended for beginners)
 latex-engine interactive
 
+# Structured document creation (UCCS Workflow)
+latex-engine uccs-workflow
+
 # List available templates
 latex-engine list-templates
 
@@ -60,6 +70,9 @@ latex-engine init --template-dir my-templates
 
 # Generate a document from template
 latex-engine generate uccs_report output.tex --variables data.yaml
+
+# Compile a `.tex` file directly
+latex-engine compile path/to/document.tex
 ```
 
 ## 📖 Usage Guide
@@ -250,6 +263,7 @@ latex-template-engine/
 ├── docs/                          # Documentation
 ├── tests/                         # Test suite
 ├── pyproject.toml                 # Project configuration
+├── projects/                      # Organized LaTeX documents
 └── README.md                      # This file
 ```
 
@@ -312,6 +326,9 @@ poetry run latex-engine info uccs_report
 
 # Test init command
 poetry run latex-engine init --template-dir test-templates
+
+# Test UCCS workflow
+poetry run latex-engine uccs-workflow
 ```
 
 ## 📚 Documentation
