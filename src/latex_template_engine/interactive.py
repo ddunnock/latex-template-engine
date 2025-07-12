@@ -138,9 +138,17 @@ class InteractiveSession:
             existing_projects = []
 
         if existing_projects:
-            self.console.print("\nExisting projects:")
+            # Display projects in a table
+            table = Table(title="Existing Projects")
+            table.add_column("ID", style="cyan", no_wrap=True)
+            table.add_column("Project Name", style="magenta")
+            table.add_column("Path", style="dim")
+
             for i, project in enumerate(existing_projects, 1):
-                self.console.print(f"  {i}. {project}")
+                project_path = self.projects_base / project
+                table.add_row(str(i), project, str(project_path))
+
+            self.console.print(table)
 
             choice = Prompt.ask(
                 "\nSelect project (number) or type 'new' to create a new project",
@@ -361,11 +369,32 @@ class InteractiveSession:
             # Get problem title
             title = Prompt.ask(f"Enter title for Problem {i}", default=f"Problem {i}")
 
-            # Get problem description
-            description = Prompt.ask(
-                f"Enter problem description for Problem {i}",
-                default=f"Problem {i} description goes here.",
+            # Get problem description with multiline support
+            self.console.print(
+                f"\n[yellow]Enter problem description for Problem {i}:[/yellow]"
             )
+            self.console.print(
+                "[dim]• Type your description (can be multiple lines)[/dim]"
+            )
+            self.console.print("[dim]• Press Enter twice when finished[/dim]")
+            self.console.print("[dim]• Or press Ctrl+C to skip[/dim]\n")
+
+            description_lines = []
+            try:
+                while True:
+                    line = input()
+                    if line.strip() == "" and description_lines:
+                        # Empty line after content - user is done
+                        break
+                    description_lines.append(line)
+
+                description = "\n".join(description_lines).strip()
+                if not description:
+                    description = f"Problem {i} description goes here."
+
+            except KeyboardInterrupt:
+                self.console.print("\n[yellow]Skipped description entry[/yellow]")
+                description = f"Problem {i} description goes here."
 
             problems.append(
                 {
@@ -647,7 +676,11 @@ class InteractiveSession:
         assignment_type = self._determine_assignment_type(assignment_title)
 
         # Generate filename: EMGT5510_Module-14_casestudy14.1.tex
-        filename = f"{class_code}_Module-{module}_{assignment_type}{safe_title}"
+        # Only include assignment type if it's not already in the safe_title
+        if assignment_type.lower() not in safe_title.lower():
+            filename = f"{class_code}_Module-{module}_{assignment_type}{safe_title}"
+        else:
+            filename = f"{class_code}_Module-{module}_{safe_title}"
 
         return base_path / f"{filename}.tex"
 
