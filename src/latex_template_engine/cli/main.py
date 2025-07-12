@@ -30,15 +30,9 @@ import yaml
 from rich.console import Console
 from rich.table import Table
 
-from ..config.schema import (  # noqa: E501
-    DocumentType,
-    FieldType,
-    TemplateConfig,
-    TemplateField,
-)
-
 # Import core engine and configuration components
 from ..core.engine import TemplateEngine
+from ..interactive import InteractiveSession
 
 # Initialize Rich console for formatted output
 console = Console()
@@ -233,6 +227,27 @@ def info(template_name: str, template_dir: Optional[Path]) -> None:
 @click.option(
     "--template-dir",
     "-t",
+    type=click.Path(exists=True, path_type=Path),
+    help="Directory containing templates",
+)
+def interactive(template_dir: Optional[Path]) -> None:
+    """Start interactive document creator.
+
+    Launches an interactive CLI session that guides users through
+    template selection, field input, and document generation.
+    Perfect for LaTeX novices who want a guided experience.
+
+    Args:
+        template_dir: Optional directory containing templates.
+    """
+    session = InteractiveSession(template_dir)
+    session.start()
+
+
+@cli.command()
+@click.option(
+    "--template-dir",
+    "-t",
     type=click.Path(path_type=Path),
     help="Directory to create templates in",
 )
@@ -288,81 +303,61 @@ def init(template_dir: Optional[Path]) -> None:
     # Save the example template to a file
     (template_dir / "example.tex.j2").write_text(example_template)
 
-    # Define an example configuration
-    example_config = TemplateConfig(
-        name="Example Template",
-        description="A simple example template",
-        document_type=DocumentType.ARTICLE,
-        author="LaTeX Template Engine",
-        version="1.0.0",
-        fields=[
-            TemplateField(
-                name="title",
-                type=FieldType.STRING,
-                label="Document Title",
-                description="The title of the document",
-                required=True,
-                default=None,
-                choices=None,
-                min_value=None,
-                max_value=None,
-            ),
-            TemplateField(
-                name="author",
-                type=FieldType.STRING,
-                label="Author",
-                description="The author of the document",
-                required=True,
-                default=None,
-                choices=None,
-                min_value=None,
-                max_value=None,
-            ),
-            TemplateField(
-                name="date",
-                type=FieldType.DATE,
-                label="Date",
-                description="The date of the document",
-                required=False,
-                default="\\today",
-                choices=None,
-                min_value=None,
-                max_value=None,
-            ),
-            TemplateField(
-                name="abstract",
-                type=FieldType.STRING,
-                label="Abstract",
-                description="Optional abstract for the document",
-                required=False,
-                default=None,
-                choices=None,
-                min_value=None,
-                max_value=None,
-            ),
-            TemplateField(
-                name="introduction",
-                type=FieldType.STRING,
-                label="Introduction",
-                description="Introduction section content",
-                required=True,
-                default=None,
-                choices=None,
-                min_value=None,
-                max_value=None,
-            ),
+    # Create a proper YAML configuration without Python object references
+    config_dict = {
+        "name": "Example Template",
+        "description": "A simple example template",
+        "document_type": "article",
+        "author": "LaTeX Template Engine",
+        "version": "1.0.0",
+        "fields": [
+            {
+                "name": "title",
+                "type": "string",
+                "label": "Document Title",
+                "description": "The title of the document",
+                "required": True,
+            },
+            {
+                "name": "author",
+                "type": "string",
+                "label": "Author",
+                "description": "The author of the document",
+                "required": True,
+            },
+            {
+                "name": "date",
+                "type": "string",
+                "label": "Date",
+                "description": "The date of the document",
+                "required": False,
+                "default": "\\today",
+            },
+            {
+                "name": "abstract",
+                "type": "string",
+                "label": "Abstract",
+                "description": "Optional abstract for the document",
+                "required": False,
+            },
+            {
+                "name": "introduction",
+                "type": "string",
+                "label": "Introduction",
+                "description": "Introduction section content",
+                "required": True,
+            },
         ],
-        sections=[],
-        packages=["geometry", "amsmath", "amsfonts"],
-        document_class="article",
-        class_options=["12pt", "letterpaper"],
-        tags=["academic", "article", "example"],
-        preview_image=None,
-    )
+        "packages": ["geometry", "amsmath", "amsfonts"],
+        "document_class": "article",
+        "class_options": ["12pt", "letterpaper"],
+        "tags": ["academic", "article", "example"],
+    }
 
     # Save the example config to a YAML file
     config_file = template_dir / "example.yaml"
-    config_file.write_text(example_config.model_dump_yaml())
+    with open(config_file, "w") as f:
+        yaml.dump(config_dict, f, default_flow_style=False, sort_keys=False)
 
     # Confirm creation with console output
     msg = f"[green]Initialized template directory: {template_dir}[/green]"

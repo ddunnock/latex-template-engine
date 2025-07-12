@@ -1,0 +1,44 @@
+name: Example Template
+description: A simple example template
+document_type: article
+author: LaTeX Template Engine
+version: 1.0.0
+fields:
+- name: title
+  type: string
+  label: Document Title
+  description: The title of the document
+  required: true
+- name: author
+  type: string
+  label: Author
+  description: The author of the document
+  required: true
+- name: date
+  type: string
+  label: Date
+  description: The date of the document
+  required: false
+  default: \today
+- name: abstract
+  type: string
+  label: Abstract
+  description: Optional abstract for the document
+  required: false
+- name: introduction
+  type: string
+  label: Introduction
+  description: Introduction section content
+  required: true
+packages:
+- geometry
+- amsmath
+- amsfonts
+document_class: article
+class_options:
+- 12pt
+- letterpaper
+tags:
+- academic
+- article
+- example

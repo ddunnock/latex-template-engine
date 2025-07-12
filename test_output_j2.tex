@@ -1,4 +1,3 @@
-<# UCCS Report Template - Based on your existing template #>
 \documentclass[12pt]{report}
 
 %------------------------------------------------------------
@@ -13,24 +12,9 @@
 \definecolor{headerblue}{RGB}{222,230,242}
 
 % ---------- Fonts -----------------------------
-<% if use_custom_fonts %>
-\usepackage{fontspec}
-\setmainfont[
-  Path       = <<fonts_path>>,
-  Extension  = .otf,
-  UprightFont= *-Regular,
-  BoldFont   = *-Bold,
-  ItalicFont = *-Italic
-]{FiraSans}
-\newfontfamily\HeadingFont[
-  Path       = <<fonts_path>>,
-  Extension  = .otf
-]{FiraSans-Light}
-<% else %>
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \newcommand{\HeadingFont}{\sffamily}
-<% endif %>
 
 % ---------- Heading format --------------------
 \usepackage{titlesec}
@@ -50,13 +34,13 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{<<student_name>>}
-\rhead{<<semester>> – <<course_code>>}
+\lhead{David Dunnock}
+\rhead{2025 summer – EMGT5510}
 \cfoot{\thepage}
 \fancypagestyle{plain}{%
   \fancyhf{}
-  \lhead{<<student_name>>}
-  \rhead{<<semester>> – <<course_code>>}
+  \lhead{David Dunnock}
+  \rhead{2025 summer – EMGT5510}
   \cfoot{\thepage}
 }
 
@@ -78,14 +62,11 @@
 %-------------------------------------------------
 \begin{titlepage}
 \begin{center}
-    <% if include_logo %>
-    \includegraphics[width=\textwidth,keepaspectratio]{<<logo_path>>}\\[1.0\baselineskip]
-    <% endif %>
 
-    {\large <<college_name>>}\\[2.5\baselineskip]
-    {\HeadingFont\fontsize{28}{30}\selectfont\textbf{<<course_code>>}}\\[0.2\baselineskip]
-    {\HeadingFont\Large <<course_title>>}\\[0.15\baselineskip]
-    {\large <<instructor_name>>}\\[3\baselineskip]
+    {\large College of Engineering & Applied Science}\\[2.5\baselineskip]
+    {\HeadingFont\fontsize{28}{30}\selectfont\textbf{EMGT5510}}\\[0.2\baselineskip]
+    {\HeadingFont\Large Leadership for Engineers}\\[0.15\baselineskip]
+    {\large Dr. William Daughton}\\[3\baselineskip]
 
     %––– centred title block –––––––––––––––––––––––––––––––––––––––––
     \begin{center}
@@ -93,14 +74,10 @@
       \color{dodblue}\rule{0.85\textwidth}{1pt}\par\vspace{0.8\baselineskip}
 
       % main title
-      {\HeadingFont\fontsize{24}{26}\selectfont\textbf{<<title>>}}\par\vspace{0.35\baselineskip}
+      {\HeadingFont\fontsize{24}{26}\selectfont\textbf{Leadership Portfolio}}\par\vspace{0.35\baselineskip}
 
-      <% if subtitle %>
       % subtitle
-      {\large\textit{<<subtitle>>}}\par\vspace{0.8\baselineskip}
-      <% else %>
-      \par\vspace{0.8\baselineskip}
-      <% endif %>
+      {\large\textit{An Introspective Analysis of Leadership Strengths, Patterns, and Growth Areas}}\par\vspace{0.8\baselineskip}
 
       % bottom rule
       \color{dodblue}\rule{0.85\textwidth}{1pt}
@@ -109,16 +86,15 @@
 
     \vfill
     \begin{tabular}{@{}rl@{}}
-        \textbf{Submitted by:} & <<student_name>> \\[0.25\baselineskip]
-        \textbf{Semester:}     & <<semester>> \\[0.25\baselineskip]
-        \textbf{Date:}         & <<date>> \\
+        \textbf{Submitted by:} & David Dunnock \\[0.25\baselineskip]
+        \textbf{Semester:}     & 2025 summer \\[0.25\baselineskip]
+        \textbf{Date:}         & \today \\
     \end{tabular}
     \vfill
 \end{center}
 \end{titlepage}
 \newpage
 
-<% if include_toc %>
 %=================================================
 %  TABLE OF CONTENTS
 %=================================================
@@ -141,25 +117,41 @@
 
 \tableofcontents
 \newpage
-<% endif %>
 
 %=================================================
 %  DOCUMENT CONTENT
 %=================================================
-<% for section in sections %>
-\section{<<section.title>>}
-<<section.content>>
+\section{Introduction}
+This portfolio provides a comprehensive analysis of my leadership development journey through various assessment instruments and reflective exercises. The document explores patterns across different leadership frameworks and identifies key areas for continued growth.
 
-<% if section.subsections %>
-<% for subsection in section.subsections %>
-\subsection{<<subsection.title>>}
-<<subsection.content>>
 
-<% endfor %>
-<% endif %>
-<% endfor %>
+\section{Overview of Leadership Instruments}
+Throughout this course, I completed several validated leadership assessment tools including the Leadership Practices Inventory, Emotional Intelligence Assessment, and the Conceptualizing Leadership Questionnaire. Each instrument provided unique insights into different facets of leadership capability and style.
 
-<% if include_references %>
+
+\section{Patterns and Themes Across Instruments}
+Analysis of results across multiple instruments reveals consistent themes in my leadership approach. This section synthesizes findings to identify core strengths and development opportunities.
+
+
+\subsection{Collaborative Leadership Style}
+Results consistently indicate a preference for collaborative, relationship-focused leadership approaches.
+
+\subsection{Communication Strengths}
+Multiple assessments highlight strong communication and interpersonal skills as key leadership assets.
+
+\section{Leadership Strengths and Areas for Growth}
+Based on comprehensive assessment results, this section outlines primary strengths to leverage and specific areas requiring focused development efforts.
+
+
+\section{Personal Leadership Development Plan}
+A structured plan for continued leadership growth, incorporating specific goals, strategies, and assessment mechanisms for the next 12-18 months.
+
+
+\section{Conclusion}
+This portfolio process has provided valuable insights into my leadership identity and trajectory. The integration of multiple assessment perspectives offers a robust foundation for continued development as an engineering leader.
+
+
+
 %=================================================
 %  REFERENCES
 %=================================================
@@ -168,13 +160,11 @@
 \begingroup
 \setlength{\parindent}{-0.5in}
 \setlength{\leftskip}{0.5in}
-<% for reference in references %>
-\mlaentry{<<reference>>}
-<% endfor %>
+\mlaentry{Kouzes, J. M., & Posner, B. Z. (2017). The Leadership Challenge: How to Make Extraordinary Things Happen in Organizations. Jossey-Bass.}
+\mlaentry{Goleman, D. (2006). Emotional Intelligence: Why It Matters More Than IQ. Bantam Books.}
+\mlaentry{Northouse, P. G. (2021). Leadership: Theory and Practice. SAGE Publications.}
 \endgroup
-<% endif %>
 
-<% if include_appendices %>
 %=================================================
 %  APPENDICES
 %=================================================
@@ -190,13 +180,17 @@
 \section*{Appendices}
 \addcontentsline{toc}{section}{Appendices}
 
-<% for appendix in appendices %>
-\section{<<appendix.title>>}
-\addcontentsline{toc}{section}{Appendix \thesection: <<appendix.title>>}
+\section{Conceptualizing Leadership Questionnaire}
+\addcontentsline{toc}{section}{Appendix \thesection: Conceptualizing Leadership Questionnaire}
 
-<<appendix.content>>
+Complete results and analysis from the Conceptualizing Leadership Questionnaire, including individual responses and scoring interpretation.
 
-<% endfor %>
-<% endif %>
+
+\section{Leadership Practices Inventory Results}
+\addcontentsline{toc}{section}{Appendix \thesection: Leadership Practices Inventory Results}
+
+Detailed LPI assessment results with comparative analysis and development recommendations.
+
+
 
 \end{document}

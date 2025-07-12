@@ -10,8 +10,9 @@ A modern LaTeX template engine with Jinja2 templating that simplifies creating a
 
 ## ✨ Features
 
-### Current (v0.1.0)
+### Current (v0.2.0)
 - ✅ **Core Template Engine**: Full Jinja2 integration with LaTeX-optimized delimiters
+- ✅ **Interactive CLI**: Guided document creation perfect for LaTeX novices
 - ✅ **CLI Interface**: Complete command-line tool for template management and document generation
 - ✅ **Template Library**: Professional templates including academic reports
 - ✅ **Configuration Schema**: Pydantic-based validation for template configurations
@@ -45,6 +46,9 @@ pip install -e .
 ### Basic Usage
 
 ```bash
+# Interactive mode (recommended for beginners)
+latex-engine interactive
+
 # List available templates
 latex-engine list-templates
 
@@ -59,6 +63,25 @@ latex-engine generate uccs_report output.tex --variables data.yaml
 ```
 
 ## 📖 Usage Guide
+
+### 0. Interactive Mode (Recommended for Beginners)
+
+The interactive CLI provides a guided experience for creating LaTeX documents:
+
+```bash
+latex-engine interactive
+```
+
+This will:
+1. **Show available templates** in a table format
+2. **Guide you through field input** with helpful prompts
+3. **Preview your configuration** before generation
+4. **Generate the LaTeX document** automatically
+5. **Optionally compile to PDF** if LaTeX is installed
+
+Perfect for LaTeX novices who want to create professional documents without writing LaTeX code directly.
+
+> 📚 **See the full [Interactive CLI Guide](docs/interactive-guide.md) for detailed walkthrough and examples.**
 
 ### 1. Working with Templates
 

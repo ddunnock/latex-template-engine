@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-07-12
+
+### Added
+- **Interactive CLI Interface**
+  - New `latex-engine interactive` command for guided document creation
+  - User-friendly prompts for template selection and field input
+  - Support for all field types: string, multiline, integer, float, boolean, choice, list
+  - Real-time validation with min/max value constraints
+  - Configuration preview before document generation
+  - Automatic LaTeX compilation with PDF generation
+  - Cross-platform PDF opening (macOS support included)
+
+- **Enhanced Template Management**
+  - Improved template listing with rich table formatting
+  - Better error handling for missing templates and configurations
+  - Automatic file naming based on document title
+  - File overwrite protection with user confirmation
+
+- **Documentation**
+  - Comprehensive Interactive CLI Guide (`docs/interactive-guide.md`)
+  - Configuration Reference documentation (`docs/configuration.md`)
+  - Updated README with interactive features prominently featured
+  - Best practices for creating user-friendly templates
+
+- **Code Quality**
+  - Full flake8 compliance with custom configuration
+  - 100% mypy type checking coverage for new interactive module
+  - Comprehensive error handling and user feedback
+  - Improved code formatting and organization
+
+### Fixed
+- Fixed YAML configuration generation to avoid Python object references
+- Improved template syntax validation and error reporting
+- Enhanced CLI help text and command descriptions
+- Better handling of optional and required template fields
+
+### Changed
+- Updated README to prioritize interactive mode for beginners
+- Enhanced CLI output with better formatting and colors
+- Improved template configuration loading with proper validation
+- Streamlined document generation workflow
+
 ## [0.1.0] - 2025-07-11
 
 ### Added
@@ -73,5 +115,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Robust error handling and validation throughout
 - Memory-efficient template processing with lazy loading
 
-[Unreleased]: https://github.com/ddunnock/latex-template-engine/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/ddunnock/latex-template-engine/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/ddunnock/latex-template-engine/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ddunnock/latex-template-engine/releases/tag/v0.1.0

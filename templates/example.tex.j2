@@ -1,31 +1,29 @@
-# Example LaTeX template using Jinja2
+\documentclass[<<document_class_options>>]{<<document_class>>}
 
-\documentclass[{{document_class_options}}]{ {{document_class}} }
+<% for package in packages %>
+\usepackage{<<package>>}
+<% endfor %>
 
-{% for package in packages %}
-\usepackage{ {{package}} }
-{% endfor %}
-
-\title{ {{title}} }
-\author{ {{author}} }
-\date{ {{date}} }
+\title{<<title>>}
+\author{<<author>>}
+\date{<<date>>}
 
 \begin{document}
 
 \maketitle
 
-{% if abstract %}
+<% if abstract %>
 \begin{abstract}
-{{abstract}}
+<<abstract>>
 \end{abstract}
-{% endif %}
+<% endif %>
 
 \section{Introduction}
-{{introduction}}
+<<introduction>>
 
-{% for section in sections %}
-\section{ {{section.title}} }
-{{section.content}}
-{% endfor %}
+<% for section in sections %>
+\section{<<section.title>>}
+<<section.content>>
+<% endfor %>
 
 \end{document}

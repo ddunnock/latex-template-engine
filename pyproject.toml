@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex-template-engine"
-version = "0.1.0"
+version = "0.2.0"
 description = "A LaTeX template engine with Jinja2 templating and editor integrations"
 authors = ["David Dunnock <your.email@example.com>"]
 readme = "README.md"
@@ -27,7 +27,7 @@ pre-commit = "^3.6.0"
 types-pyyaml = "^6.0.12.20250516"
 
 [tool.poetry.scripts]
-latex-engine = "latex_template_engine.cli:main"
+latex-engine = "latex_template_engine.cli.main:main"
 
 [build-system]
 requires = ["poetry-core"]
