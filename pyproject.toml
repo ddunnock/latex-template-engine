@@ -24,6 +24,7 @@ isort = "^5.12.0"
 flake8 = "^6.1.0"
 mypy = "^1.7.1"
 pre-commit = "^3.6.0"
+types-pyyaml = "^6.0.12.20250516"
 
 [tool.poetry.scripts]
 latex-engine = "latex_template_engine.cli:main"
@@ -41,7 +42,16 @@ profile = "black"
 multi_line_output = 3
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.9"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+ignore_missing_imports = false
+show_error_codes = true
+
+# Ignore errors in third-party packages
+[[tool.mypy.overrides]]
+module = [
+    "pydantic.*",
+]
+ignore_errors = true

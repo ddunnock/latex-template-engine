@@ -30,7 +30,12 @@ import yaml
 from rich.console import Console
 from rich.table import Table
 
-from ..config.schema import TemplateConfig
+from ..config.schema import (  # noqa: E501
+    DocumentType,
+    FieldType,
+    TemplateConfig,
+    TemplateField,
+)
 
 # Import core engine and configuration components
 from ..core.engine import TemplateEngine
@@ -41,7 +46,7 @@ console = Console()
 
 @click.group()
 @click.version_option()
-def cli():
+def cli() -> None:
     """LaTeX Template Engine - Generate LaTeX documents from Jinja2 templates.
 
     This is the main CLI entry point that sets up the command group.
@@ -57,7 +62,7 @@ def cli():
     type=click.Path(exists=True, path_type=Path),
     help="Directory containing templates",
 )
-def list_templates(template_dir: Optional[Path]):
+def list_templates(template_dir: Optional[Path]) -> None:
     """List all available templates.
 
     Scans the template directory for .tex files and displays them in a
@@ -110,7 +115,7 @@ def generate(
     output_path: Path,
     variables: Optional[Path],
     template_dir: Optional[Path],
-):
+) -> None:
     """Generate a LaTeX document from a template.
 
     This command generates a LaTeX document by applying the specified
@@ -158,7 +163,7 @@ def generate(
     type=click.Path(exists=True, path_type=Path),
     help="Directory containing templates",
 )
-def info(template_name: str, template_dir: Optional[Path]):
+def info(template_name: str, template_dir: Optional[Path]) -> None:
     """Show information about a template.
 
     Displays detailed information about the specified template, including
@@ -231,7 +236,7 @@ def info(template_name: str, template_dir: Optional[Path]):
     type=click.Path(path_type=Path),
     help="Directory to create templates in",
 )
-def init(template_dir: Optional[Path]):
+def init(template_dir: Optional[Path]) -> None:
     """Initialize a new template directory with examples.
 
     Sets up a new template directory and populates it with example LaTeX
@@ -287,44 +292,72 @@ def init(template_dir: Optional[Path]):
     example_config = TemplateConfig(
         name="Example Template",
         description="A simple example template",
-        document_type="article",
+        document_type=DocumentType.ARTICLE,
         author="LaTeX Template Engine",
+        version="1.0.0",
         fields=[
-            {
-                "name": "title",
-                "type": "string",
-                "label": "Document Title",
-                "required": True,
-            },
-            {
-                "name": "author",
-                "type": "string",
-                "label": "Author",
-                "required": True,
-            },
-            {
-                "name": "date",
-                "type": "date",
-                "label": "Date",
-                "default": "\\today",
-            },
-            {
-                "name": "abstract",
-                "type": "string",
-                "label": "Abstract",
-                "required": False,
-            },
-            {
-                "name": "introduction",
-                "type": "string",
-                "label": "Introduction",
-                "required": True,
-            },
+            TemplateField(
+                name="title",
+                type=FieldType.STRING,
+                label="Document Title",
+                description="The title of the document",
+                required=True,
+                default=None,
+                choices=None,
+                min_value=None,
+                max_value=None,
+            ),
+            TemplateField(
+                name="author",
+                type=FieldType.STRING,
+                label="Author",
+                description="The author of the document",
+                required=True,
+                default=None,
+                choices=None,
+                min_value=None,
+                max_value=None,
+            ),
+            TemplateField(
+                name="date",
+                type=FieldType.DATE,
+                label="Date",
+                description="The date of the document",
+                required=False,
+                default="\\today",
+                choices=None,
+                min_value=None,
+                max_value=None,
+            ),
+            TemplateField(
+                name="abstract",
+                type=FieldType.STRING,
+                label="Abstract",
+                description="Optional abstract for the document",
+                required=False,
+                default=None,
+                choices=None,
+                min_value=None,
+                max_value=None,
+            ),
+            TemplateField(
+                name="introduction",
+                type=FieldType.STRING,
+                label="Introduction",
+                description="Introduction section content",
+                required=True,
+                default=None,
+                choices=None,
+                min_value=None,
+                max_value=None,
+            ),
         ],
+        sections=[],
         packages=["geometry", "amsmath", "amsfonts"],
         document_class="article",
         class_options=["12pt", "letterpaper"],
         tags=["academic", "article", "example"],
+        preview_image=None,
     )
 
     # Save the example config to a YAML file
@@ -339,7 +372,7 @@ def init(template_dir: Optional[Path]):
     console.print(f"[dim]Created example config: {config_file}[/dim]")
 
 
-def main():
+def main() -> None:
     """Entry point for the CLI.
 
     This function is the main entry point for executing the CLI commands.
