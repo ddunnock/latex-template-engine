@@ -379,7 +379,7 @@ class InteractiveSession:
             self.console.print("[dim]• Press Enter twice when finished[/dim]")
             self.console.print("[dim]• Or press Ctrl+C to skip[/dim]\n")
 
-            description_lines = []
+            description_lines: List[str] = []
             try:
                 while True:
                     line = input()
