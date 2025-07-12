@@ -571,21 +571,112 @@ class InteractiveSession:
         self.console.print("\n[bold]Configuration Preview:[/bold]")
 
         table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("Field", style="cyan")
-        table.add_column("Value", style="green")
+        table.add_column("Field", style="cyan", width=20)
+        table.add_column("Value", style="green", width=50)
 
-        for key, value in self.user_data.items():
-            if isinstance(value, list):
-                value_str = ", ".join(str(v) for v in value)
+        # Format data in a more readable way
+        formatted_data = self._format_configuration_data(self.user_data)
+
+        for key, value in formatted_data.items():
+            # Handle multiline values
+            if "\n" in str(value):
+                # For multiline values, truncate display only if very long
+                lines = str(value).split("\n")
+                if len(lines) > 6:  # Only truncate if more than 6 lines
+                    display_value = (
+                        "\n".join(lines[:4]) + "\n[dim]... (truncated)[/dim]"
+                    )
+                else:
+                    display_value = str(value)
             else:
-                value_str = str(value)
-            table.add_row(key, value_str)
+                display_value = str(value)
+
+            table.add_row(key, display_value)
 
         self.console.print(table)
 
         return Confirm.ask(
             "\nGenerate LaTeX document with this configuration?", default=True
         )
+
+    def _format_configuration_data(self, data: Dict[str, Any]) -> Dict[str, str]:
+        """Format configuration data for better readability in preview."""
+        formatted = {}
+
+        for key, value in data.items():
+            if key == "student" and isinstance(value, dict):
+                formatted["Student Name"] = value.get("name", "Not specified")
+
+            elif key == "course" and isinstance(value, dict):
+                course_info = []
+                if "id" in value:
+                    course_info.append(f"Course: {value['id']}")
+                if "title" in value:
+                    course_info.append(f"Title: {value['title']}")
+                if "instructor" in value:
+                    course_info.append(f"Instructor: {value['instructor']}")
+                if "term" in value:
+                    course_info.append(f"Term: {value['term']}")
+                formatted["Course Info"] = "\n".join(course_info)
+
+            elif key == "assignment" and isinstance(value, dict):
+                assignment_info = []
+                if "number" in value:
+                    assignment_info.append(f"Module: {value['number']}")
+                if "title" in value:
+                    assignment_info.append(f"Title: {value['title']}")
+                formatted["Assignment Info"] = "\n".join(assignment_info)
+
+            elif key == "num_problems":
+                formatted["Number of Problems"] = str(value)
+
+            elif key == "problems" and isinstance(value, list):
+                problem_summaries = []
+                for i, problem in enumerate(value, 1):
+                    if isinstance(problem, dict):
+                        title = problem.get("title", f"Problem {i}")
+                        desc = problem.get("description", "")
+                        # Show just the title and first line of description
+                        desc_preview = (
+                            desc.split("\n")[0][:50] + "..."
+                            if len(desc) > 50
+                            else desc.split("\n")[0]
+                        )
+                        problem_summaries.append(f"Problem {i}: {title}")
+                        if desc_preview:
+                            problem_summaries.append(f"  {desc_preview}")
+                formatted["Problems"] = "\n".join(problem_summaries)
+
+            elif key == "config" and isinstance(value, dict):
+                # Skip config details as they're internal
+                continue
+
+            elif key == "report" and isinstance(value, dict):
+                report_info = []
+                if "module" in value:
+                    report_info.append(f"Module: {value['module']}")
+                if "title" in value:
+                    report_info.append(f"Title: {value['title']}")
+                if "subtitle" in value:
+                    report_info.append(f"Subtitle: {value['subtitle']}")
+                formatted["Report Info"] = "\n".join(report_info)
+
+            elif isinstance(value, dict):
+                # Generic dict formatting
+                dict_items = []
+                for k, v in value.items():
+                    dict_items.append(f"{k.replace('_', ' ').title()}: {v}")
+                formatted[key.replace("_", " ").title()] = "\n".join(dict_items)
+
+            elif isinstance(value, list):
+                formatted[key.replace("_", " ").title()] = ", ".join(
+                    str(v) for v in value
+                )
+
+            else:
+                formatted[key.replace("_", " ").title()] = str(value)
+
+        return formatted
 
     def _generate_document(self, template_name: str) -> None:
         """Generate the final LaTeX document."""
@@ -664,23 +755,41 @@ class InteractiveSession:
         base_path = Path(f"classes/{class_code}/{semester_year}")
 
         # Generate filename based on user data
-        # Use nested data structure for assignment fields
-        assignment = self.user_data.get("assignment", {})
-        module = assignment.get("number", "unknown")
-        assignment_title = assignment.get("title", "assignment")
+        # Check if this is a homework or report template
+        if "assignment" in self.user_data:
+            # Homework template
+            assignment = self.user_data.get("assignment", {})
+            module = assignment.get("number", "unknown")
+            assignment_title = assignment.get("title", "assignment")
 
-        # Clean up the assignment title for filename
-        safe_title = assignment_title.lower().replace(" ", "").replace(".", "")
+            # Clean up the assignment title for filename
+            safe_title = assignment_title.lower().replace(" ", "").replace(".", "")
 
-        # Try to extract assignment type from title or user data
-        assignment_type = self._determine_assignment_type(assignment_title)
+            # Try to extract assignment type from title or user data
+            assignment_type = self._determine_assignment_type(assignment_title)
 
-        # Generate filename: EMGT5510_Module-14_casestudy14.1.tex
-        # Only include assignment type if it's not already in the safe_title
-        if assignment_type.lower() not in safe_title.lower():
-            filename = f"{class_code}_Module-{module}_{assignment_type}{safe_title}"
+            # Generate filename: EMGT5510_Module-14_casestudy14.1.tex
+            # Only include assignment type if it's not already in the safe_title
+            if assignment_type.lower() not in safe_title.lower():
+                filename = f"{class_code}_Module-{module}_{assignment_type}{safe_title}"
+            else:
+                filename = f"{class_code}_Module-{module}_{safe_title}"
+
+        elif "report" in self.user_data:
+            # Report template
+            report = self.user_data.get("report", {})
+            module = report.get("module", "unknown")
+            report_title = report.get("title", "report")
+
+            # Clean up the report title for filename
+            safe_title = report_title.lower().replace(" ", "").replace(".", "")
+
+            # For reports, use "report" as the type
+            filename = f"{class_code}_{module}_report_{safe_title}"
+
         else:
-            filename = f"{class_code}_Module-{module}_{safe_title}"
+            # Fallback
+            filename = f"{class_code}_document"
 
         return base_path / f"{filename}.tex"
 
