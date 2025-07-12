@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex-template-engine"
-version = "0.3.0"
+version = "0.4.0"
 description = "A LaTeX template engine with Jinja2 templating and editor integrations"
 authors = ["David Dunnock <your.email@example.com>"]
 readme = "README.md"

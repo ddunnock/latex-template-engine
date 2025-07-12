@@ -18,15 +18,49 @@ latex-engine interactive --template-dir /path/to/templates
 
 The interactive interface guides you through these steps:
 
-1. **Template Selection** - Choose from available templates
-2. **Field Input** - Enter content for each template field
-3. **Preview** - Review your configuration
-4. **Generation** - Create the LaTeX document
-5. **Compilation** - Optionally compile to PDF
+1. **Project Selection** - Choose or create a new project directory
+2. **Template Selection** - Choose from available templates
+3. **Field Input** - Enter content for each template field
+4. **Preview** - Review your configuration
+5. **Generation** - Create the LaTeX document
+6. **Compilation** - Optionally compile to PDF
 
 ## Step-by-Step Walkthrough
 
-### 1. Template Selection
+### 1. Project Selection
+
+The interface first helps you organize your work by selecting or creating a project:
+
+```
+Project Selection
+
+Existing projects:
+  1. school-work
+  2. personal-docs
+  3. research-papers
+
+Select project (number) or type 'new' to create a new project [new]: 
+```
+
+#### Creating a New Project
+
+If you choose 'new' or no projects exist:
+
+```
+Enter project name: My Academic Research
+
+Created project: My Academic Research
+Path: /path/to/projects/my-academic-research
+```
+
+#### Project Benefits
+
+- **Organization**: Keep related documents together
+- **Asset Management**: Shared fonts, images, and resources
+- **Flexible Structure**: Different folder layouts for different project types
+- **Easy Navigation**: Find your documents in well-organized directories
+
+### 2. Template Selection
 
 The interface displays all available templates in a table format:
 
@@ -44,7 +78,7 @@ Select template by ID [1]:
 
 Simply enter the number corresponding to your desired template.
 
-### 2. Field Input
+### 3. Field Input
 
 For each field defined in the template, you'll be prompted to enter information:
 
@@ -75,7 +109,7 @@ Enter author: John Doe
 - **Cancel input**: Press Ctrl+C to skip a field
 - **Multiline text**: For multiline fields, press Ctrl+D when finished
 
-### 3. Configuration Preview
+### 4. Configuration Preview
 
 Before generating the document, you'll see a preview:
 
@@ -96,22 +130,24 @@ Generate LaTeX document with this configuration? [Y/n]:
 
 Review your inputs and confirm to proceed.
 
-### 4. Document Generation
+### 5. Document Generation
 
 If you confirm, the interface will:
 
-1. Generate the LaTeX file
-2. Ask for confirmation if a file with the same name exists
-3. Show the output path
+1. Create the appropriate directory structure within your project
+2. Generate the LaTeX file with proper organization
+3. Create necessary symlinks for assets (fonts, images)
+4. Ask for confirmation if a file with the same name exists
+5. Show the output path
 
 ```
 ✓ Document generated successfully!
-Output: my_research_paper.tex
+Output: projects/my-academic-research/my_research_paper.tex
 
 Compile LaTeX document now? [Y/n]:
 ```
 
-### 5. PDF Compilation (Optional)
+### 6. PDF Compilation (Optional)
 
 If you have LaTeX installed (pdflatex), the interface can compile your document:
 
@@ -130,6 +166,8 @@ On macOS, it will automatically open the PDF in your default viewer.
 
 - The output filename is automatically generated from the document title
 - Spaces are replaced with underscores
+- Files are organized within your selected project directory
+- For UCCS templates, structured paths are created (e.g., `classes/EMGT5510/2025_summer/`)
 - If a file exists, you'll be prompted to overwrite or choose a new name
 
 ### Error Handling

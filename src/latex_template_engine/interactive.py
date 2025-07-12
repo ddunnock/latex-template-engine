@@ -26,6 +26,8 @@ class InteractiveSession:
         self.template_variables: Dict[str, Any] = {}
         self.user_data: Dict[str, Any] = {}
         self.asset_manager = AssetManager()
+        self.project_info: Dict[str, Any] = {}
+        self.projects_base = Path.cwd() / "projects"
 
     def start(self) -> None:
         """Start the interactive session."""
@@ -48,20 +50,23 @@ class InteractiveSession:
         elif action != "create":
             return
 
-        # Step 2: Choose template
+        # Step 2: Choose or create project
+        self._choose_or_create_project()
+
+        # Step 3: Choose template
         template_name = self._choose_template()
         if not template_name:
             return
 
-        # Step 3: Load template configuration
+        # Step 4: Load template configuration
         self._load_template_config(template_name)
 
-        # Step 4: Collect user input
+        # Step 5: Collect user input
         self._collect_user_input()
 
-        # Step 5: Preview configuration
+        # Step 6: Preview configuration
         if self._preview_and_confirm():
-            # Step 6: Generate document
+            # Step 7: Generate document
             self._generate_document(template_name)
 
     def _choose_action(self) -> str:
@@ -117,6 +122,87 @@ class InteractiveSession:
                         self._generate_document(template_name)
         else:
             self.console.print("[yellow]Asset setup cancelled[/yellow]")
+
+    def _choose_or_create_project(self) -> None:
+        """Let user choose existing project or create new one."""
+        self.console.print("\n[bold]Project Selection[/bold]")
+
+        # Check if projects directory exists and has projects
+        if self.projects_base.exists():
+            existing_projects = [
+                p.name
+                for p in self.projects_base.iterdir()
+                if p.is_dir() and not p.name.startswith(".")
+            ]
+        else:
+            existing_projects = []
+
+        if existing_projects:
+            self.console.print("\nExisting projects:")
+            for i, project in enumerate(existing_projects, 1):
+                self.console.print(f"  {i}. {project}")
+
+            choice = Prompt.ask(
+                "\nSelect project (number) or type 'new' to create a new project",
+                default="new",
+            )
+
+            if choice.lower() == "new":
+                self._create_new_project()
+            else:
+                try:
+                    project_index = int(choice) - 1
+                    if 0 <= project_index < len(existing_projects):
+                        self.project_info = {
+                            "name": existing_projects[project_index],
+                            "path": self.projects_base
+                            / existing_projects[project_index],
+                        }
+                        project_name = self.project_info["name"]
+                        self.console.print(
+                            f"\n[green]Selected project: {project_name}[/green]"
+                        )
+                    else:
+                        self.console.print(
+                            "[red]Invalid selection. Creating new project.[/red]"
+                        )
+                        self._create_new_project()
+                except ValueError:
+                    self.console.print(
+                        "[red]Invalid input. Creating new project.[/red]"
+                    )
+                    self._create_new_project()
+        else:
+            self.console.print("\nNo existing projects found.")
+            self._create_new_project()
+
+    def _create_new_project(self) -> None:
+        """Create a new project with user input."""
+        project_name = Prompt.ask("\nEnter project name")
+
+        # Clean project name for filesystem
+        clean_name = project_name.lower().replace(" ", "-").replace("_", "-")
+        project_path = self.projects_base / clean_name
+
+        # Check if project already exists
+        if project_path.exists():
+            overwrite = Confirm.ask(
+                f"Project '{clean_name}' already exists. Continue anyway?", default=True
+            )
+            if not overwrite:
+                return self._choose_or_create_project()
+
+        # Create project directory
+        project_path.mkdir(parents=True, exist_ok=True)
+
+        self.project_info = {
+            "name": clean_name,
+            "display_name": project_name,
+            "path": project_path,
+        }
+
+        self.console.print(f"\n[green]Created project: {project_name}[/green]")
+        self.console.print(f"Path: {project_path}")
 
     def _choose_template(self) -> Optional[str]:
         """Let user choose from available templates."""
@@ -476,7 +562,20 @@ class InteractiveSession:
         """Generate the final LaTeX document."""
         try:
             # Determine output path based on template type
-            output_path = self._get_output_path(template_name)
+            output_path = self.project_info["path"] / self._get_output_path(
+                template_name
+            )
+
+            # Create directories if they don't exist
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+
+            # Create symlink to assets if it doesn't exist
+            assets_link = output_path.parent / "assets"
+            if not assets_link.exists():
+                assets_source = Path.cwd() / "assets"
+                if assets_source.exists():
+                    assets_link.symlink_to(assets_source)
+                    self.console.print("[dim]Created assets symlink[/dim]")
 
             # Check if file exists
             if output_path.exists():
@@ -526,17 +625,14 @@ class InteractiveSession:
 
     def _get_uccs_output_path(self) -> Path:
         """Generate UCCS-style output path with proper folder structure."""
-        # Create the UCCS project structure
-        base_path = Path.cwd() / "projects/uccs-me-syse/classes/EMGT5510/2025_summer"
-        base_path.mkdir(parents=True, exist_ok=True)
+        # For UCCS templates, ask for class and semester information
+        class_code = Prompt.ask("Enter class code (e.g., EMGT5510)", default="EMGT5510")
+        semester_year = Prompt.ask(
+            "Enter semester and year (e.g., 2025_summer)", default="2025_summer"
+        )
 
-        # Create symlink to assets if it doesn't exist
-        assets_link = base_path / "assets"
-        if not assets_link.exists():
-            assets_source = Path.cwd() / "assets"
-            if assets_source.exists():
-                assets_link.symlink_to(assets_source)
-                self.console.print("[dim]Created assets symlink[/dim]")
+        # Create the UCCS project structure within the project
+        base_path = Path(f"classes/{class_code}/{semester_year}")
 
         # Generate filename based on user data
         # Use nested data structure for assignment fields
@@ -551,7 +647,7 @@ class InteractiveSession:
         assignment_type = self._determine_assignment_type(assignment_title)
 
         # Generate filename: EMGT5510_Module-14_casestudy14.1.tex
-        filename = f"EMGT5510_Module-{module}_{assignment_type}{safe_title}"
+        filename = f"{class_code}_Module-{module}_{assignment_type}{safe_title}"
 
         return base_path / f"{filename}.tex"
 

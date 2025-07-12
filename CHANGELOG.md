@@ -7,6 +7,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-07-12
+
+### Added
+- **Advanced Project Management System**
+  - Interactive project selection and creation within the CLI
+  - Support for multiple projects with organized directory structures
+  - Filesystem-safe project naming with automatic cleanup
+  - Project-specific folder organization for better document management
+
+- **Flexible Directory Structure**
+  - Dynamic path generation based on project type and template
+  - Enhanced UCCS template workflow with class code and semester prompts
+  - Automatic nested directory creation for structured project organization
+  - Improved asset management with project-level symlinks
+
+- **Enhanced Interactive Experience**
+  - Multi-step workflow: Action → Project → Template → Configuration → Generation
+  - User-friendly project selection menu with numbered options
+  - Confirmation prompts for project overwrites and file conflicts
+  - Comprehensive console feedback with clear status messages
+
+### Improved
+- Interactive CLI now supports complex project organization workflows
+- Better separation of concerns between project management and document generation
+- Enhanced error handling for project creation and file operations
+- Improved user experience with clearer prompts and feedback
+
+### Technical
+- Added `project_info` and `projects_base` attributes to `InteractiveSession`
+- New methods: `_choose_or_create_project()`, `_create_new_project()`
+- Updated path management system to use project-relative paths
+- Automatic asset symlink creation for LaTeX compilation compatibility
+
 ## [0.3.0] - 2025-07-12
 
 ### Added
@@ -135,7 +168,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Robust error handling and validation throughout
 - Memory-efficient template processing with lazy loading
 
-[Unreleased]: https://github.com/ddunnock/latex-template-engine/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/ddunnock/latex-template-engine/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/ddunnock/latex-template-engine/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/ddunnock/latex-template-engine/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ddunnock/latex-template-engine/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ddunnock/latex-template-engine/releases/tag/v0.1.0

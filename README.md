@@ -10,17 +10,19 @@ A modern LaTeX template engine with Jinja2 templating that simplifies creating a
 
 ## ✨ Features
 
-### Current (v0.3.0)
+### Current (v0.4.0)
 - ✅ **Core Template Engine**: Full Jinja2 integration with LaTeX-optimized delimiters
-- ✅ **Interactive CLI**: Guided document creation perfect for LaTeX novices
+- ✅ **Advanced Project Management**: Multi-project support with organized directory structures
+- ✅ **Interactive CLI**: Guided document creation with project selection and management
 - ✅ **CLI Interface**: Complete command-line tool for template management and document generation
 - ✅ **Template Library**: Professional templates including academic reports
 - ✅ **Configuration Schema**: Pydantic-based validation for template configurations
 - ✅ **Rich Output**: Beautiful formatted CLI output with tables and colors
 - ✅ **Type Safety**: Full mypy type checking for robust development
-  - ✅ **Project Management**: Automated asset link creation and seamless organization
-   - ✅ **Structured Workflows**: New command `uccs-workflow` for structured document creation
-   - ✅ **Direct Compilation**: Compile `.tex` files directly with `compile` command
+- ✅ **Flexible Organization**: Dynamic folder structures based on project type and template
+- ✅ **Structured Workflows**: New command `uccs-workflow` for structured document creation
+- ✅ **Direct Compilation**: Compile `.tex` files directly with `compile` command
+- ✅ **Asset Management**: Automatic symlink creation for consistent resource access
 
 ### Planned
 - 🔄 Neovim plugin with graphical interface
@@ -86,13 +88,14 @@ latex-engine interactive
 ```
 
 This will:
-1. **Show available templates** in a table format
-2. **Guide you through field input** with helpful prompts
-3. **Preview your configuration** before generation
-4. **Generate the LaTeX document** automatically
-5. **Optionally compile to PDF** if LaTeX is installed
+1. **Project Selection**: Choose from existing projects or create new ones
+2. **Template Selection**: Browse available templates in a table format
+3. **Field Input**: Guided prompts with validation and helpful descriptions
+4. **Configuration Preview**: Review all settings before generation
+5. **Document Generation**: Create LaTeX documents with organized folder structures
+6. **Automatic Compilation**: Optionally compile to PDF if LaTeX is installed
 
-Perfect for LaTeX novices who want to create professional documents without writing LaTeX code directly.
+Perfect for LaTeX novices who want to create professional documents with proper project organization.
 
 > 📚 **See the full [Interactive CLI Guide](docs/interactive-guide.md) for detailed walkthrough and examples.**
 
