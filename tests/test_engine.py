@@ -23,7 +23,7 @@ def temp_template_dir():
 <<content>>
 \\end{document}'''
     
-    (temp_dir / "test.tex").write_text(test_template)
+    (temp_dir / "test.tex.j2").write_text(test_template)
     
     yield temp_dir
     

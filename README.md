@@ -14,7 +14,7 @@ A modern LaTeX template engine with Jinja2 templating, providing graphical inter
 ```
 latex-template-engine/
 ├── src/latex_template_engine/     # Core Python package
-├── templates/                     # Jinja2 LaTeX templates
+├── templates/                     # Jinja2 LaTeX templates (*.tex.j2)
 ├── schemas/                       # Template configuration schemas
 ├── plugins/                       # Editor plugins
 │   ├── nvim/                     # Neovim plugin

@@ -5,6 +5,10 @@ LaTeX templates. The engine loads templates, resolves variables, and generates
 final LaTeX documents using Jinja2, making it a central component of the
 LaTeX template system.
 
+Template File Convention:
+    All Jinja2 template files use the `.tex.j2` extension to distinguish
+    them from regular LaTeX files and clearly indicate they are templates.
+
 Components:
     TemplateEngine: Provides methods for loading, listing, and rendering templates and manages template configurations.
     Template: Represents individual templates and provides rendering capabilities.
@@ -13,9 +17,9 @@ Usage:
     Initialize a TemplateEngine to manage your templates directory and perform operations like listing available templates, loading specific templates, and generating LaTeX documents.
 
 Example:
-    [90m[1m[22m[22m[22m[22mfrom pathlib import Path[22m
+    from pathlib import Path
     engine = TemplateEngine(Path('./templates'))
-    template_names = engine.list_templates()
+    template_names = engine.list_templates()  # Lists .tex.j2 files
     document = engine.generate_document('report', {'title': 'Report Title'})
 """
 
@@ -69,7 +73,7 @@ class TemplateEngine:
         file extension) and its corresponding configuration file (.yaml).
 
         Args:
-            template_name: Name of the template file (without .tex extension)
+            template_name: Name of the template file (without .tex.j2 extension)
 
         Returns:
             Template: A template object that wraps the Jinja2 template
@@ -80,15 +84,15 @@ class TemplateEngine:
             ValueError: If the configuration file is invalid or cannot be parsed.
         """
         # Locate template and configuration paths
-        template_path = self.template_dir / f"{template_name}.tex"
+        template_path = self.template_dir / f"{template_name}.tex.j2"
         config_path = self.template_dir / f"{template_name}.yaml"
 
         # Check if template file exists
         if not template_path.exists():
-            raise FileNotFoundError(f"Template {template_name}.tex not found")
+            raise FileNotFoundError(f"Template {template_name}.tex.j2 not found")
 
         # Load Jinja2 template
-        jinja_template = self.env.get_template(f"{template_name}.tex")
+        jinja_template = self.env.get_template(f"{template_name}.tex.j2")
 
         # Attempt to load and validate configuration file, if present
         config = None
@@ -107,14 +111,16 @@ class TemplateEngine:
         """List all available templates.
 
         This method scans the template directory and returns a list of all
-        available template filenames (without their file extensions).
+        available template filenames (without their .tex.j2 extensions).
 
         Returns:
             List[str]: Sorted list of template names
         """
         templates = []
-        for file_path in self.template_dir.glob("*.tex"):
-            templates.append(file_path.stem)  # Extract filename without extension
+        for file_path in self.template_dir.glob("*.tex.j2"):
+            # Extract filename without .tex.j2 extension
+            template_name = file_path.name.replace('.tex.j2', '')
+            templates.append(template_name)
         return sorted(templates)
 
     def generate_document(
@@ -162,16 +168,16 @@ class TemplateEngine:
         optionally provide an associated configuration in YAML format.
 
         Args:
-            name: Base filename for the new template (without extension)
+            name: Base filename for the new template (without .tex.j2 extension)
             content: String content of the Jinja2 template
             config: Optional configuration object for the template
                      defining variables and structure
         """
         # Define paths for template and config files
-        template_path = self.template_dir / f"{name}.tex"
+        template_path = self.template_dir / f"{name}.tex.j2"
         config_path = self.template_dir / f"{name}.yaml"
 
-        # Write the template content to the .tex file
+        # Write the template content to the .tex.j2 file
         template_path.write_text(content)
 
         # If a configuration is provided, dump it to a YAML file

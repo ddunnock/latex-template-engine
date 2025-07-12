@@ -78,7 +78,7 @@ def list_templates(template_dir: Optional[Path]):
     
     # Add each template to the table
     for template in templates:
-        template_path = engine.template_dir / f"{template}.tex"
+        template_path = engine.template_dir / f"{template}.tex.j2"
         table.add_row(template, str(template_path))
     
     # Display the table using Rich console
@@ -252,7 +252,7 @@ def init(template_dir: Optional[Path]):
 \end{document}'''
     
     # Save the example template to a file
-    (template_dir / "example.tex").write_text(example_template)
+    (template_dir / "example.tex.j2").write_text(example_template)
     
     # Define an example configuration
     example_config = TemplateConfig(
@@ -278,7 +278,7 @@ def init(template_dir: Optional[Path]):
     
     # Confirm creation with console output
     console.print(f"[green]Initialized template directory: {template_dir}[/green]")
-    console.print(f"[dim]Created example template: {template_dir / 'example.tex'}[/dim]")
+    console.print(f"[dim]Created example template: {template_dir / 'example.tex.j2'}[/dim]")
     console.print(f"[dim]Created example config: {template_dir / 'example.yaml'}[/dim]")
 
 
