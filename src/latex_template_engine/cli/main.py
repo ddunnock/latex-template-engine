@@ -31,6 +31,7 @@ from rich.console import Console
 from rich.table import Table
 
 # Import core engine and configuration components
+from ..assets.manager import AssetManager
 from ..core.engine import TemplateEngine
 from ..interactive import InteractiveSession
 
@@ -225,6 +226,168 @@ def info(template_name: str, template_dir: Optional[Path]) -> None:
 
 @cli.command()
 @click.option(
+    "--module",
+    prompt="Module number",
+    help="The module number for the assignment",
+)
+@click.option(
+    "--type",
+    prompt="Assignment type (e.g., casestudy, homework)",
+    help="Type of assignment",
+)
+@click.option(
+    "--title",
+    prompt="Assignment title",
+    help="Title of the assignment",
+)
+def uccs_workflow(module: str, type: str, title: str) -> None:
+    """Workflow to generate and organize LaTeX files for your UCCS ME-SYSE progression.
+
+    Automatically generates LaTeX files with proper naming and saves them to
+    ./projects/uccs-me-syse/classes/EMGT5510/2025_summer/.
+
+    Args:
+        module: The module number for the assignment.
+        type: Type of assignment.
+        title: Title of the assignment.
+    """
+    import subprocess
+
+    # Use local projects folder structure
+    base_path = Path.cwd() / "projects/uccs-me-syse/classes/EMGT5510/2025_summer"
+    base_path.mkdir(parents=True, exist_ok=True)
+
+    # Create symlink to assets if it doesn't exist
+    assets_link = base_path / "assets"
+    if not assets_link.exists():
+        assets_source = Path.cwd() / "assets"
+        if assets_source.exists():
+            assets_link.symlink_to(assets_source)
+            console.print("[dim]Created assets symlink[/dim]")
+
+    # Create filename following your existing naming convention
+    safe_title = title.replace(" ", "").replace(".", "").lower()
+    filename = f"EMGT5510_Module-{module}_{type.lower()}{safe_title}"
+    tex_file = base_path / f"{filename}.tex"
+    pdf_file = base_path / f"{filename}.pdf"
+
+    # Start interactive session to use existing templates
+    session = InteractiveSession()
+
+    # Ask user to select template
+    console.print("[bold blue]Starting UCCS Workflow[/bold blue]")
+    console.print(f"Will save to: {tex_file}")
+    console.print("\nSelect a template to use:")
+
+    # Get templates and let user choose
+    templates = session.engine.list_templates()
+    if not templates:
+        console.print("[red]No templates found![/red]")
+        return
+
+    # Display template options
+    for i, template in enumerate(templates, 1):
+        console.print(f"  {i}. {template}")
+
+    while True:
+        try:
+            choice = click.prompt("Choose template", type=int)
+            if 1 <= choice <= len(templates):
+                selected_template = templates[choice - 1]
+                break
+            else:
+                console.print("[red]Invalid choice. Please try again.[/red]")
+        except (ValueError, click.Abort):
+            console.print("[red]Invalid input. Please enter a number.[/red]")
+
+    # Generate document using selected template
+    template = session.engine.load_template(selected_template)
+
+    # Collect field values
+    field_values = {}
+    if template.config and template.config.fields:
+        console.print(f"\n[bold]Template: {template.config.name}[/bold]")
+        console.print(f"Description: {template.config.description}\n")
+
+        for field in template.config.fields:
+            field_values[field.name] = session._get_field_value(field)
+
+    # Generate the document
+    session.engine.generate_document(selected_template, field_values, tex_file)
+    console.print(f"[green]Generated LaTeX file: {tex_file}[/green]")
+
+    # Compile the document
+    console.print("\nCompiling LaTeX document...")
+    result = subprocess.run(
+        ["tectonic", str(tex_file)], capture_output=True, text=True, cwd=base_path
+    )
+
+    if result.returncode == 0:
+        console.print(f"[green]✓ Generated PDF: {pdf_file}[/green]")
+
+        # Ask if user wants to open the PDF
+        if click.confirm("Open the generated PDF?"):
+            subprocess.run(["open", str(pdf_file)])
+    else:
+        console.print(f"[red]Error compiling LaTeX: {result.stderr}[/red]")
+        console.print("[yellow]LaTeX file saved but compilation failed.[/yellow]")
+
+
+@cli.command()
+@click.argument("tex_file", type=click.Path(exists=True, path_type=Path))
+@click.option(
+    "--engine",
+    "-e",
+    type=click.Choice(["tectonic", "xelatex", "pdflatex", "lualatex"]),
+    default="tectonic",
+    help="LaTeX engine to use for compilation",
+)
+@click.option(
+    "--open",
+    "-o",
+    is_flag=True,
+    help="Open the generated PDF after compilation",
+)
+def compile(tex_file: Path, engine: str, open: bool) -> None:
+    """Compile a LaTeX file to PDF.
+
+    Args:
+        tex_file: Path to the LaTeX file to compile.
+        engine: LaTeX engine to use for compilation.
+        open: Whether to open the PDF after compilation.
+    """
+    import subprocess
+
+    # Change to the directory containing the LaTeX file
+    tex_dir = tex_file.parent
+    tex_filename = tex_file.name
+    pdf_file = tex_dir / f"{tex_file.stem}.pdf"
+
+    console.print(f"[blue]Compiling {tex_filename} with {engine}...[/blue]")
+
+    # Compile based on chosen engine
+    if engine == "tectonic":
+        result = subprocess.run(
+            ["tectonic", str(tex_file)], capture_output=True, text=True, cwd=tex_dir
+        )
+    else:
+        result = subprocess.run(
+            [engine, tex_filename], capture_output=True, text=True, cwd=tex_dir
+        )
+
+    if result.returncode == 0:
+        console.print(f"[green]✓ Generated PDF: {pdf_file}[/green]")
+
+        if open:
+            subprocess.run(["open", str(pdf_file)])
+    else:
+        console.print("[red]Error compiling LaTeX:[/red]")
+        console.print(f"[red]{result.stderr}[/red]")
+        raise click.Abort()
+
+
+@cli.command()
+@click.option(
     "--template-dir",
     "-t",
     type=click.Path(exists=True, path_type=Path),
@@ -242,6 +405,41 @@ def interactive(template_dir: Optional[Path]) -> None:
     """
     session = InteractiveSession(template_dir)
     session.start()
+
+
+@cli.command()
+@click.option(
+    "--action",
+    "-a",
+    type=click.Choice(["setup", "list"]),
+    default="setup",
+    help="Asset management action: setup fonts/images or list existing assets",
+)
+def assets(action: str) -> None:
+    """Manage fonts, images, and other template assets.
+
+    This command allows you to import fonts and images into the project
+    structure, making them available for use in templates.
+
+    Args:
+        action: Either 'setup' to import new assets or 'list' to show existing ones.
+    """
+    asset_manager = AssetManager()
+
+    if action == "setup":
+        console.print("[bold blue]Asset Setup[/bold blue]")
+        console.print("Setting up fonts and images for templates...\n")
+
+        asset_config = asset_manager.setup_assets_interactive()
+
+        if asset_config:
+            console.print("\n[green]✓ Asset setup complete![/green]")
+            asset_manager.list_assets()
+        else:
+            console.print("[yellow]Asset setup cancelled[/yellow]")
+
+    elif action == "list":
+        asset_manager.list_assets()
 
 
 @cli.command()

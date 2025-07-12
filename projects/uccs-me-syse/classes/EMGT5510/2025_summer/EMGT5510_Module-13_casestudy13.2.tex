@@ -1,0 +1,150 @@
+% !TeX program = xelatex
+% Generated homework assignment for EMGT5510 using latex-template-engine
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  EMGT5510  Homework Template  ––  UCCS College of Engineering & Applied Science
+%  Generated: \today
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% NOTE ▸ One‑file template aligned stylistically with the report template.
+% ▸ Uses identical Fira Sans font set and DoD‑blue heading color.
+% ▸ Generated from template engine for EMGT5510_HW13.tex
+
+\documentclass[12pt]{article}
+
+%------------------------------------------------------------
+%  PREAMBLE  (geometry, colors, fonts, shared asset paths)
+%------------------------------------------------------------
+\usepackage[margin=1in,headheight=14.5pt]{geometry}
+\usepackage{array,tabularx,longtable,graphicx}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+
+% ---------- Shared asset search path ----------
+\makeatletter
+\def\input@path{assets/}
+\graphicspath{{assets/images/}}
+\makeatother
+% ----------------------------------------------
+
+% ---------- Corporate palette -----------------
+\definecolor{dodblue}{RGB}{0,102,204}  % heading and rule color
+\definecolor{headerblue}{RGB}{222,230,242}
+
+% ---------- Fonts -----------------------------
+\usepackage{fontspec}
+% Body text – Fira Sans Regular/Bold/Italic
+\setmainfont[
+  Path       = assets/fonts/,
+  Extension  = .otf,
+  UprightFont= *-Regular,
+  BoldFont   = *-Bold,
+  ItalicFont = *-Italic
+]{FiraSans}
+% Heading font – light weight variant
+\newfontfamily\HeadingFont[
+  Path       = assets/fonts/,
+  Extension  = .otf
+]{FiraSans-Light}
+% ----------------------------------------------
+
+% ---------- Heading format --------------------
+\setcounter{secnumdepth}{1}
+\titleformat{\section}
+  {\color{dodblue}\HeadingFont\Large\bfseries}
+  {\thesection\quad}{0pt}{}
+\titlespacing*{\section}{0pt}{1.5\baselineskip}{0.5\baselineskip}
+% ----------------------------------------------
+
+% ---------- Page header/footer ----------------
+\pagestyle{fancy}
+\fancyhf{}
+% — left header – student name
+\lhead{David Dunnock}
+% — right header – course & term
+\rhead{Summer 2025 – EMGT5510}
+% — footer page number
+\cfoot{\thepage}
+% — ensure headers/footers appear on all pages including title page
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \lhead{David Dunnock}
+  \rhead{Summer 2025 – EMGT5510}
+  \cfoot{\thepage}
+}
+% ----------------------------------------------
+
+% ---------- Problem environment ---------------
+\newenvironment{problem}{\color{dodblue}\itshape}{\par}
+% ----------------------------------------------
+
+% ---------- Misc styling ----------------------
+\doublespacing
+\setlist[itemize]{noitemsep, topsep=0pt}
+% ----------------------------------------------
+
+%------------------------------------------------------------
+%  USER‑CONFIGURABLE MACROS
+%------------------------------------------------------------
+\newcommand{\homeworknum}{13}  % homework number
+
+%------------------------------------------------------------
+%  BEGIN DOCUMENT
+%------------------------------------------------------------
+\begin{document}
+
+%-------------------------------------------------
+%  TITLE BLOCK (compact – no separate page)
+%-------------------------------------------------
+\begin{center}
+    % UCCS signature logo
+    \includegraphics[width=0.9\textwidth,keepaspectratio]{assets/images/uccs-logo.png}\\[8\baselineskip]
+
+    {\HeadingFont\fontsize{24}{26}\selectfont\textbf{EMGT5510}}\\[0.25\baselineskip]
+    {\large Leadership for Engineers}\\[0.15\baselineskip]
+    {\small Dr. William Daughton}\\[2\baselineskip]
+\vfill
+
+    {\HeadingFont\fontsize{20}{22}\selectfont\textbf{Module 13: Case Study 13.2}}\\[0.5\baselineskip]
+    {Submitted by \textbf{David Dunnock}}\\[0.15\baselineskip]
+    {\today}
+\end{center}
+
+% Optional blank line before problems begin
+\newpage
+
+%=================================================
+%  PROBLEM 1
+%=================================================
+\section*{Problem 1\textemdash{}Who follows whom?}
+\begin{problem}
+In what way is this case about followership? Who were the followers? Who were the leaders?
+\end{problem}
+
+\textbf{Answer:}\\
+This case is a profound example of followership as a relational and dynamic process, illustrating both role-based and relational-based perspectives. The members of the University of Washington rowing team exemplify followership by fully embracing their roles within the team structure, subordinating personal ego for the collective success of the boat. Each athlete was not merely a passive participant, but an engaged and responsible contributor to the team’s overall performance—an embodiment of what Kelley (1992) defines as “exemplary followers.”
+
+From a role-based perspective, the rowers displayed the key characteristics of effective followers: self-management, strong commitment to a common goal, developed competence, and ethical responsibility. Their synchronized rowing, flawless execution, and adaptation to adversity (e.g., illness, poor lane assignment, missed start) reveal a high degree of interdependence, mutual trust, and shared responsibility. These are precisely the types of behaviors that Uhl-Bien et al. (2014) include in their formal theory of followership under the categories of followership behaviors and outcomes.
+
+Relationally, the team constructed its identity and unity through constant interpersonal interaction—motivating each other, resolving tensions, and aligning efforts without centralized direction. This dynamic aligns with the “leadership co-created process” model, in which leadership emerges through the reciprocal actions of leading and following rather than through assigned roles.
+
+In this case, Al Ulbrickson served as the formal leader, orchestrating combinations of talent and fostering team cohesion. Yet once the optimal composition was discovered, the athletes internalized the goals and expectations so completely that the team began to exhibit characteristics of a self-leading entity. This is the hallmark of a high-performing team: a collective of individuals so aligned in purpose, trust, and skill that they can operate with minimal oversight and adapt rapidly to new challenges.
+
+Thus, while Ulbrickson initiated and shaped the team’s development, the true leadership became distributed within the shell. Each rower led in their own way—through courage, presence, and unwavering support of one another. The coxswain provided tactical leadership, but the emotional and moral leadership was mutual and shared. The rowers were the followers, but in the most empowered and proactive sense: they were the reason the team succeeded.
+
+In sum, this case study is a vivid demonstration of the power of followership to not only support leadership but to co-create it. It reveals that the goal of leadership is not simply to command but to cultivate a system in which followers are empowered to act autonomously and ethically in pursuit of a shared mission. When such a system is achieved, as in this Olympic team, the result is a high-performing team that can, in essence, lead itself.
+
+%=================================================
+%  End of assignment
+%=================================================
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  END –– UCCS Homework Template with Jinja2 Variables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

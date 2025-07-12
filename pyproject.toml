@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "latex-template-engine"
-version = "0.2.0"
+version = "0.3.0"
 description = "A LaTeX template engine with Jinja2 templating and editor integrations"
 authors = ["David Dunnock <your.email@example.com>"]
 readme = "README.md"
@@ -15,6 +15,9 @@ rich = "^13.7.0"
 watchdog = "^3.0.0"
 pydantic = "^2.5.0"
 pathlib2 = "^2.3.7"
+# LaTeX compilation and processing
+latexcodec = "^3.0.0"
+pylatex = "^1.4.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"

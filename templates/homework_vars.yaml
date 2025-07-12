@@ -1,0 +1,53 @@
+# Variables for UCCS Homework Template
+# This file contains only the variables needed for rendering the template
+
+student:
+  name: "David Dunnock"
+
+course:
+  id: "EMGT5510"
+  title: "Leadership for Engineers"
+  instructor: "Dr. William Daughton"
+  term: "Summer 2025"
+
+assignment:
+  number: "01"
+  module: "Module-1"
+  title: "Leadership Fundamentals"
+
+config:
+  texmf_path: "assets"
+  fonts_path: "assets/fonts"
+  images_path: "assets/images"
+  include_lipsum: true  # Set to false to disable placeholder text
+
+# Optional: Define specific problems (remove to use default sample problems)
+problems:
+  - title: "Sample Analytical Question"
+    description: "Analyze the given leadership scenario and provide a comprehensive solution using the frameworks discussed in class."
+    answer: null  # Leave null to use placeholder text
+    equations:
+      - label: "leadership_effectiveness"
+        content: "E = f(S, T, F)"
+        description: "where $E$ is effectiveness, $S$ is situational factors, $T$ is team dynamics, and $F$ is follower readiness."
+  
+  - title: "Computational Exercise" 
+    description: "Calculate the optimal team size for the given project parameters using the provided formulas."
+    answer: null
+    equations:
+      - label: "team_size"
+        content: "n_{opt} = \\sqrt{\\frac{2C_c}{C_m}}"
+        description: "where $n_{opt}$ is optimal team size, $C_c$ is coordination cost, and $C_m$ is marginal productivity."
+  
+  - title: "Short Design Discussion"
+    description: "Design a leadership intervention for a cross-functional team experiencing communication challenges."
+    answer: null
+    equations: []
+  
+  - title: "Data Interpretation"
+    description: "Interpret the team performance metrics data and identify key improvement areas."
+    answer: null
+    equations:
+      - label: "performance_index"
+        content: "PI = \\frac{\\sum_{i=1}^{n} w_i \\cdot m_i}{n}"
+        description: "where $PI$ is performance index, $w_i$ are weights, and $m_i$ are individual metrics."

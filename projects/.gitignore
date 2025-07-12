@@ -1,0 +1,20 @@
+# Generated LaTeX files
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.nav
+*.snm
+*.vrb
+
+# Keep tex and pdf files
+!*.tex
+!*.pdf
+
+# Keep the directory structure
+!*/

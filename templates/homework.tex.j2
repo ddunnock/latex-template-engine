@@ -1,0 +1,303 @@
+% !TeX program = xelatex
+% Generated homework assignment for << course.id >> using latex-template-engine
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  << course.id >>  Homework Template  ––  UCCS College of Engineering & Applied Science
+%  Generated: \today
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% NOTE ▸ One‑file template aligned stylistically with the report template.
+% ▸ Uses identical Fira Sans font set and DoD‑blue heading color.
+% ▸ Generated from template engine for << course.id >>_HW<< assignment.number >>.tex
+
+\documentclass[12pt]{article}
+
+%------------------------------------------------------------
+%  PREAMBLE  (geometry, colors, fonts, shared asset paths)
+%------------------------------------------------------------
+\usepackage[margin=1in,headheight=14.5pt]{geometry}
+\usepackage{array,tabularx,longtable,graphicx}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+<% if config.include_lipsum -%>
+\usepackage{lipsum}
+<% endif %>
+
+% ---------- Shared asset search path ----------
+\makeatletter
+\def\input@path{<< config.texmf_path >>/}
+\graphicspath{{<< config.images_path >>/}}
+\makeatother
+% ----------------------------------------------
+
+% ---------- Corporate palette -----------------
+\definecolor{dodblue}{RGB}{0,102,204}  % heading and rule color
+\definecolor{headerblue}{RGB}{222,230,242}
+
+% ---------- Fonts -----------------------------
+\usepackage{fontspec}
+% Body text – Fira Sans Regular/Bold/Italic
+<% if config.fonts_path -%>
+\setmainfont[
+  Path       = << config.fonts_path >>/,
+  Extension  = .otf,
+  UprightFont= *-Regular,
+  BoldFont   = *-Bold,
+  ItalicFont = *-Italic
+]{FiraSans}
+% Heading font – light weight variant
+\newfontfamily\HeadingFont[
+  Path       = << config.fonts_path >>/,
+  Extension  = .otf
+]{FiraSans-Light}
+<% else -%>
+% Using system fonts (no custom fonts imported)
+\setmainfont{Arial}
+\newfontfamily\HeadingFont{Arial}
+<% endif -%>
+% ----------------------------------------------
+
+% ---------- Heading format --------------------
+\setcounter{secnumdepth}{1}
+\titleformat{\section}
+  {\color{dodblue}\HeadingFont\Large\bfseries}
+  {\thesection\quad}{0pt}{}
+\titlespacing*{\section}{0pt}{1.5\baselineskip}{0.5\baselineskip}
+% ----------------------------------------------
+
+% ---------- Page header/footer ----------------
+\pagestyle{fancy}
+\fancyhf{}
+% — left header – student name
+\lhead{<< student.name >>}
+% — right header – course & term
+\rhead{<< course.term >> – << course.id >>}
+% — footer page number
+\cfoot{\thepage}
+% — ensure headers/footers appear on all pages including title page
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \lhead{<< student.name >>}
+  \rhead{<< course.term >> – << course.id >>}
+  \cfoot{\thepage}
+}
+% ----------------------------------------------
+
+% ---------- Problem environment ---------------
+\newenvironment{problem}{\color{dodblue}\itshape}{\par}
+% ----------------------------------------------
+
+% ---------- Misc styling ----------------------
+\doublespacing
+\setlist[itemize]{noitemsep, topsep=0pt}
+% ----------------------------------------------
+
+%------------------------------------------------------------
+%  USER‑CONFIGURABLE MACROS
+%------------------------------------------------------------
+\newcommand{\homeworknum}{<< assignment.number >>}  % homework number
+
+%------------------------------------------------------------
+%  BEGIN DOCUMENT
+%------------------------------------------------------------
+\begin{document}
+
+%-------------------------------------------------
+%  TITLE BLOCK (compact – no separate page)
+%-------------------------------------------------
+\begin{center}
+    % UCCS signature logo
+    \includegraphics[width=0.9\textwidth,keepaspectratio]{uccs-logo.png}\\[8\baselineskip]
+
+    {\HeadingFont\fontsize{24}{26}\selectfont\textbf{<< course.id >>}}\\[0.25\baselineskip]
+    {\large << course.title >>}\\[0.15\baselineskip]
+    {\small << course.instructor >>}\\[2\baselineskip]
+\vfill
+
+    {\HeadingFont\fontsize{20}{22}\selectfont\textbf{Module << assignment.number >>: << assignment.title >>}}\\[0.5\baselineskip]
+    {Submitted by \textbf{<< student.name >>}}\\[0.15\baselineskip]
+    {\today}
+\end{center}
+
+% Optional blank line before problems begin
+\newpage
+
+<% if problems -%>
+<% for problem in problems %>
+%=================================================
+%  PROBLEM << loop.index >>
+%=================================================
+\section*{Problem << loop.index >><% if problem.title %> –– << problem.title >><% endif %>}
+\begin{problem}
+<% if problem.description -%>
+<< problem.description >>
+<% else -%>
+<% if config.include_lipsum -%>
+\lipsum[<< loop.index >>]
+<% else -%>
+Problem << loop.index >> description goes here.
+<% endif -%>
+<% endif -%>
+\end{problem}
+
+\textbf{Answer:}\\
+<% if problem.answer -%>
+<< problem.answer >>
+<% else -%>
+<% if config.include_lipsum -%>
+\lipsum[<< loop.index + 10 >>]
+<% else -%>
+Your answer for Problem << loop.index >> goes here.
+<% endif -%>
+<% endif %>
+
+<% if problem.equations -%>
+<% for equation in problem.equations %>
+\begin{equation}<% if equation.label %>\label{eq:<< equation.label >>}<% endif %>
+<< equation.content >>
+\end{equation}
+<% if equation.description -%>
+<< equation.description >>
+<% endif %>
+
+<% endfor -%>
+<% endif -%>
+
+<% endfor -%>
+<% else -%>
+%=================================================
+%  PROBLEM 1
+%=================================================
+\section*{Problem 1 –– Sample Analytical Question}
+\begin{problem}
+<% if config.include_lipsum -%>
+\lipsum[1]
+<% else -%>
+Problem 1 description goes here.
+<% endif -%>
+\end{problem}
+
+\textbf{Answer:}\\
+<% if config.include_lipsum -%>
+\lipsum[2]
+
+A representative formula used in the solution could be written as
+\begin{equation}\label{eq:newton}
+F = m\,a
+\end{equation}
+where $F$ is force, $m$ is mass, and $a$ is acceleration.
+
+To illustrate summation:
+\begin{equation}
+S = \sum_{k=1}^{n} k = \frac{n(n+1)}{2}.
+\end{equation}
+<% else -%>
+Your answer for Problem 1 goes here.
+<% endif -%>
+
+%=================================================
+%  PROBLEM 2
+%=================================================
+\section*{Problem 2 –– Computational Exercise}
+\begin{problem}
+<% if config.include_lipsum -%>
+\lipsum[3]
+<% else -%>
+Problem 2 description goes here.
+<% endif -%>
+\end{problem}
+
+\textbf{Answer:}\\
+<% if config.include_lipsum -%>
+\lipsum[4]
+
+The governing quadratic formula is
+\begin{equation}
+\label{eq:quadratic}
+x = \frac{-b \pm \sqrt{b^{2}-4ac}}{2a}.
+\end{equation}
+
+For continuous compounding, we employ
+\begin{equation}
+\label{eq:exp}
+A(t) = A_0 e^{rt},
+\end{equation}
+where $A_0$ is the principal and $r$ the nominal rate.
+<% else -%>
+Your answer for Problem 2 goes here.
+<% endif -%>
+
+%=================================================
+%  PROBLEM 3
+%=================================================
+\section*{Problem 3 –– Short Design Discussion}
+\begin{problem}
+<% if config.include_lipsum -%>
+\lipsum[5]
+<% else -%>
+Problem 3 description goes here.
+<% endif -%>
+\end{problem}
+
+\textbf{Answer:}\\
+<% if config.include_lipsum -%>
+\lipsum[6]
+
+An example matrix formulation:
+\begin{equation}
+\mathbf{K}\,\mathbf{x} = \mathbf{f},
+\end{equation}
+where $\mathbf{K}$ is the stiffness matrix, $\mathbf{x}$ the displacement vector, and $\mathbf{f}$ the load vector.
+
+Eigen‑analysis for vibration modes follows
+\begin{equation}
+\det\bigl(\mathbf{K} - \omega^{2}\mathbf{M}\bigr) = 0.
+\end{equation}
+<% else -%>
+Your answer for Problem 3 goes here.
+<% endif -%>
+
+%=================================================
+%  PROBLEM 4
+%=================================================
+\section*{Problem 4 –– Data Interpretation}
+\begin{problem}
+<% if config.include_lipsum -%>
+\lipsum[7]
+<% else -%>
+Problem 4 description goes here.
+<% endif -%>
+\end{problem}
+
+\textbf{Answer:}\\
+<% if config.include_lipsum -%>
+\lipsum[8]
+
+A sample statistical expression:
+\begin{equation}
+\mu = \frac{1}{N}\sum_{i=1}^{N} x_i, \qquad \sigma^{2} = \frac{1}{N-1}\sum_{i=1}^{N}(x_i-\mu)^{2}.
+\end{equation}
+
+Linear regression is obtained by solving
+\begin{equation}
+\hat{\beta} = (\mathbf{X}^{\top}\mathbf{X})^{-1}\mathbf{X}^{\top}\mathbf{y}.
+\end{equation}
+<% else -%>
+Your answer for Problem 4 goes here.
+<% endif -%>
+<% endif -%>
+
+%=================================================
+%  End of assignment
+%=================================================
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  END –– UCCS Homework Template with Jinja2 Variables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

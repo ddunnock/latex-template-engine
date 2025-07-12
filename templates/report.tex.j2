@@ -1,0 +1,312 @@
+% !TeX program = xelatex
+% Generated report for << course.id >> using latex-template-engine
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  << course.id >>  Report Template  ––  UCCS College of Engineering & Applied Science
+%  Generated: \today
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt]{report}
+
+%------------------------------------------------------------
+%  PREAMBLE  (typography, colors, asset paths)
+%------------------------------------------------------------
+\usepackage[margin=1in,headheight=14.5pt]{geometry}
+\usepackage{array,tabularx,longtable,graphicx,caption,amssymb,amsmath}
+\usepackage[table]{xcolor}
+<% if config.include_lipsum -%>
+\usepackage{lipsum}
+<% endif %>
+
+% --- Corporate palette ----
+\definecolor{dodblue}{RGB}{0,102,204}
+\definecolor{headerblue}{RGB}{222,230,242}
+
+% ---------- Shared asset search path ----------
+\makeatletter
+\def\input@path{<< config.texmf_path >>/}
+\graphicspath{{<< config.images_path >>/}}
+\makeatother
+% ----------------------------------------------
+
+% ---------- Fonts -----------------------------
+\usepackage{fontspec}
+% Main body font: Fira Sans family
+<% if config.fonts_path -%>
+\setmainfont[
+  Path       = << config.fonts_path >>/,
+  Extension  = .otf,
+  UprightFont= *-Regular,
+  BoldFont   = *-Bold,
+  ItalicFont = *-Italic
+]{FiraSans}
+% Heading font: light weight for contrast
+\newfontfamily\HeadingFont[
+  Path       = << config.fonts_path >>/,
+  Extension  = .otf
+]{FiraSans-Light}
+<% else -%>
+% Using system fonts (no custom fonts imported)
+\setmainfont{Arial}
+\newfontfamily\HeadingFont{Arial}
+<% endif -%>
+% ----------------------------------------------
+
+% ---------- Heading format --------------------
+\usepackage{titlesec}
+\setcounter{secnumdepth}{1}
+\renewcommand\thesection{\arabic{section}.}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}}
+\titleformat{\section}
+  {\color{dodblue}\HeadingFont\fontsize{18}{20}\selectfont}
+  {\thesection\quad}{0pt}{}
+\titleformat{\subsection}
+  {\color{dodblue}\HeadingFont\fontsize{15}{17}\selectfont}
+  {\thesubsection\quad}{0pt}{}
+\titlespacing*{\section}{0pt}{6pt plus 2pt}{3pt plus 1pt}
+\titlespacing*{\subsection}{0pt}{4pt plus 2pt}{2pt plus 1pt}
+
+% ---------- Page header/footer ----------------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+% — left header – student name
+\lhead{<< student.name >>}
+% — right header – course & term
+\rhead{<< course.term >> – << course.id >>}
+% — footer page number
+\cfoot{\thepage}
+% — ensure headers/footers appear on all pages including title page
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \lhead{<< student.name >>}
+  \rhead{<< course.term >> – << course.id >>}
+  \cfoot{\thepage}
+}
+% ----------------------------------------------
+
+% ---------- Misc packages ---------------------
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+\usepackage{chngcntr,placeins,setspace}
+\counterwithin{figure}{section}
+\renewcommand{\thefigure}{\thesection\arabic{figure}}
+\doublespacing
+\newcommand{\mlaentry}[1]{\hangindent=0.5in\noindent #1\par}
+
+%------------------------------------------------------------
+%  BEGIN DOCUMENT
+%------------------------------------------------------------
+\begin{document}
+
+%-------------------------------------------------
+%  TITLE PAGE (update placeholders as needed)
+%-------------------------------------------------
+\begin{titlepage}
+\begin{center}
+    % UCCS signature logo (located in texmf/images/)
+    \includegraphics[width=\textwidth,keepaspectratio]{uccs-logo.png}\\[1.0\baselineskip]
+
+    {\large College of Engineering \& Applied Science}\\[2.5\baselineskip]
+    {\HeadingFont\fontsize{28}{30}\selectfont\textbf{<< course.id >>}}\\[0.2\baselineskip]
+    {\HeadingFont\Large << course.title >>}\\[0.15\baselineskip]
+    {\large << course.instructor >>}\\[3\baselineskip]
+
+    %––– centred title block –––––––––––––––––––––––––––––––––––––––––
+    \begin{center}
+      % top rule
+      \color{dodblue}\rule{0.85\textwidth}{1pt}\par\vspace{0.8\baselineskip}
+
+      % main title - module and assignment info
+      {\HeadingFont\fontsize{24}{26}\selectfont\textbf{<< report.module >>: << report.title >>}}\par\vspace{0.35\baselineskip}
+
+      % subtitle (optional) - comment out the next line if not needed
+      <% if report.subtitle -%>
+      {\large\textit{<< report.subtitle >>}}\par\vspace{0.8\baselineskip}
+      <% else -%>
+      \vspace{0.8\baselineskip}
+      <% endif -%>
+
+      % bottom rule
+      \color{dodblue}\rule{0.85\textwidth}{1pt}
+    \end{center}
+    %––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+    \vfill
+    \begin{tabular}{@{}rl@{}}
+        \textbf{Submitted by:} & << student.name >> \\[0.25\baselineskip]
+        \textbf{Semester:}     & << course.term >> \\[0.25\baselineskip]
+        \textbf{Date:}         & \today \\
+    \end{tabular}
+    \vfill
+\end{center}
+\end{titlepage}
+\newpage
+
+<% if sections -%>
+<% for section in sections -%>
+%=================================================
+%  << loop.index >> << section.title >>
+%=================================================
+\section{<< section.title >>}
+<% if section.content -%>
+<< section.content >>
+<% else -%>
+<% if config.include_lipsum -%>
+\lipsum[<< loop.index >>]
+<% else -%>
+Content for << section.title >> goes here.
+<% endif -%>
+<% endif %>
+
+<% if section.subsections -%>
+<% for subsection in section.subsections -%>
+\subsection{<< subsection.title >>}
+<% if subsection.content -%>
+<< subsection.content >>
+<% else -%>
+<% if config.include_lipsum -%>
+\lipsum[<< loop.index0 * 3 + loop.index + 10 >>]
+<% else -%>
+Content for << subsection.title >> goes here.
+<% endif -%>
+<% endif %>
+
+<% endfor -%>
+<% endif -%>
+
+<% endfor -%>
+<% else -%>
+%=================================================
+%  1 Executive Summary
+%=================================================
+\section{Executive Summary}
+<% if config.include_lipsum -%>
+\lipsum[1]
+<% else -%>
+Executive summary content goes here.
+<% endif %>
+
+%=================================================
+%  2 Introduction & Report Scope
+%=================================================
+\section{Introduction \& Report Scope}
+<% if config.include_lipsum -%>
+\lipsum[2]
+<% else -%>
+Introduction and report scope content goes here.
+<% endif %>
+
+%=================================================
+%  3 Analysis & Findings
+%=================================================
+\section{Analysis \& Findings}
+\subsection{Key Findings}
+<% if config.include_lipsum -%>
+\lipsum[3]
+<% else -%>
+Key findings content goes here.
+<% endif %>
+
+\subsection{Supporting Analysis}
+<% if config.include_lipsum -%>
+\lipsum[4]
+<% else -%>
+Supporting analysis content goes here.
+<% endif %>
+
+\subsection{Implications}
+<% if config.include_lipsum -%>
+\lipsum[5]
+<% else -%>
+Implications content goes here.
+<% endif %>
+
+%=================================================
+%  4 Recommendations
+%=================================================
+\section{Recommendations}
+<% if config.include_lipsum -%>
+\lipsum[6]
+<% else -%>
+Recommendations content goes here.
+<% endif %>
+
+%=================================================
+%  5 Conclusion
+%=================================================
+\section{Conclusion}
+<% if config.include_lipsum -%>
+\lipsum[7]
+<% else -%>
+Conclusion content goes here.
+<% endif %>
+<% endif -%>
+
+<% if references -%>
+%=================================================
+%  References
+%=================================================
+\newpage
+\section*{Works Cited}
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+<% for ref in references -%>
+\mlaentry{<< ref >>}
+<% endfor -%>
+\endgroup
+<% else -%>
+%=================================================
+%  References (placeholder entries)
+%=================================================
+\newpage
+\section*{Works Cited}
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+<% if config.include_lipsum -%>
+\mlaentry{Author. \textit{Title of Source}. Publisher, Year.}
+\mlaentry{Second Author. \textit{Title}. Journal, vol., no., Year, pp.}
+<% else -%>
+\mlaentry{Add your references here following MLA format.}
+<% endif -%>
+\endgroup
+<% endif -%>
+
+<% if appendices -%>
+%=================================================
+%  Appendices
+%=================================================
+\appendix
+\renewcommand\thesection{\Alph{section}}
+<% for appendix in appendices -%>
+\section{<< appendix.title >>}
+<% if appendix.content -%>
+<< appendix.content >>
+<% else -%>
+<% if config.include_lipsum -%>
+\lipsum[<< loop.index + 20 >>]
+<% else -%>
+Content for << appendix.title >> goes here.
+<% endif -%>
+<% endif %>
+
+<% endfor -%>
+<% else -%>
+%=================================================
+%  Appendices
+%=================================================
+\appendix
+\renewcommand\thesection{\Alph{section}}
+\section{Appendix Title}
+<% if config.include_lipsum -%>
+\lipsum[14]
+<% else -%>
+Appendix content goes here.
+<% endif %>
+<% endif -%>
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  END –– UCCS Generic Report Template with Jinja2 Variables
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

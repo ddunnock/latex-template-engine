@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2025-07-12
+
+### Added
+- **Project Folder Structure**
+  - Added `projects/` folder for organized LaTeX document management
+  - Automatic asset symlink creation for consistent resource access
+  - New readme section in documentation for project organization and workflows
+
+- **CLI Enhancements**
+  - Added `uccs-workflow` command for structured document generation
+  - Added `compile` command for compiling existing `.tex` files
+
+- **Code Quality Improvements**
+  - Fixed flake8 issues for cleaner, more maintainable code
+  - Ensured black and isort compliance across all files
+
+### Updated
+- Documentation to reflect changes in project organization and CLI commands
+- CHANGELOG to include new features
+
 ## [0.2.0] - 2025-07-12
 
 ### Added
@@ -115,6 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Robust error handling and validation throughout
 - Memory-efficient template processing with lazy loading
 
-[Unreleased]: https://github.com/ddunnock/latex-template-engine/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/ddunnock/latex-template-engine/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/ddunnock/latex-template-engine/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/ddunnock/latex-template-engine/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/ddunnock/latex-template-engine/releases/tag/v0.1.0

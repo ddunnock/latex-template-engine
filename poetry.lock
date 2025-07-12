@@ -308,6 +308,18 @@ MarkupSafe = ">=2.0"
 i18n = ["Babel (>=2.7)"]
 
 [[package]]
+name = "latexcodec"
+version = "3.0.1"
+description = "A lexer and codec to work with LaTeX code in Python."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "latexcodec-3.0.1-py3-none-any.whl", hash = "sha256:a9eb8200bff693f0437a69581f7579eb6bca25c4193515c09900ce76451e452e"},
+    {file = "latexcodec-3.0.1.tar.gz", hash = "sha256:e78a6911cd72f9dec35031c6ec23584de6842bfbc4610a9678868d14cdfb0357"},
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "3.0.0"
 description = "Python port of markdown-it. Markdown parsing, done right!"
@@ -505,6 +517,21 @@ files = [
     {file = "nodeenv-1.9.1-py2.py3-none-any.whl", hash = "sha256:ba11c9782d29c27c70ffbdda2d7415098754709be8a7056d79a737cd901155c9"},
     {file = "nodeenv-1.9.1.tar.gz", hash = "sha256:6ec12890a2dab7946721edbfbcd91f3319c6ccc9aec47be7c7e6b7011ee6645f"},
 ]
+
+[[package]]
+name = "ordered-set"
+version = "4.1.0"
+description = "An OrderedSet is a custom MutableSet that remembers its order, so that every"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "ordered-set-4.1.0.tar.gz", hash = "sha256:694a8e44c87657c59292ede72891eb91d34131f6531463aab3009191c77364a8"},
+    {file = "ordered_set-4.1.0-py3-none-any.whl", hash = "sha256:046e1132c71fcf3330438a539928932caf51ddbc582496833e23de611de14562"},
+]
+
+[package.extras]
+dev = ["black", "mypy", "pytest"]
 
 [[package]]
 name = "packaging"
@@ -769,6 +796,29 @@ files = [
 
 [package.extras]
 windows-terminal = ["colorama (>=0.4.6)"]
+
+[[package]]
+name = "pylatex"
+version = "1.4.2"
+description = "A Python library for creating LaTeX files and snippets"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "PyLaTeX-1.4.2.tar.gz", hash = "sha256:bb7b21bec57ecdba3f6f44c856ebebdf6549fd6e80661bd44fd5094236729242"},
+]
+
+[package.dependencies]
+ordered-set = "*"
+
+[package.extras]
+all = ["MarkupSafe (==2.0.1)", "alabaster (<0.7.12)", "black", "coverage", "isort", "jinja2 (<3.0)", "matplotlib", "numpy", "pytest (>=4.6)", "pytest-cov", "quantities", "sphinx", "twine"]
+docs = ["MarkupSafe (==2.0.1)", "alabaster (<0.7.12)", "jinja2 (<3.0)", "sphinx"]
+matplotlib = ["matplotlib"]
+matrices = ["numpy"]
+packaging = ["twine"]
+quantities = ["numpy", "quantities"]
+testing = ["black", "coverage", "isort", "pytest (>=4.6)", "pytest-cov"]
 
 [[package]]
 name = "pytest"
@@ -1053,4 +1103,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9"
-content-hash = "88f7d096e8908d3b33aff46f975036d0dd575022d24061980440b344511db889"
+content-hash = "3b5ac054e345002f09e4094464cdcf3c0ff2442d7621ba35a961c41a8a5182b3"

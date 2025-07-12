@@ -1,0 +1,110 @@
+# Variables for UCCS Report Template
+# This file contains only the variables needed for rendering the template
+
+student:
+  name: "David Dunnock"
+
+course:
+  id: "EMGT5510"
+  title: "Leadership for Engineers"
+  instructor: "Dr. William Daughton"
+  term: "Summer 2025"
+
+report:
+  module: "Module-2"
+  title: "Leadership Analysis Report"
+  subtitle: "Organizational Leadership Case Study"  # Optional, remove if not needed
+
+config:
+  texmf_path: "assets"
+  fonts_path: "assets/fonts"
+  images_path: "assets/images"
+  include_lipsum: true  # Set to false to disable placeholder text
+
+# Optional: Define specific sections (remove to use default structure)
+sections:
+  - name: "executive_summary"
+    title: "Executive Summary"
+    content: "This report analyzes the leadership challenges and opportunities within the selected organization, providing actionable recommendations for improved leadership effectiveness."
+    subsections: []
+  
+  - name: "introduction"
+    title: "Introduction & Report Scope"
+    content: "This analysis examines the leadership dynamics within XYZ Corporation, focusing on the transition from traditional hierarchical management to modern adaptive leadership approaches."
+    subsections: []
+  
+  - name: "company_context"
+    title: "Company & Industry Context"
+    content: null  # Will use placeholder text
+    subsections:
+      - name: "business_model"
+        title: "Business Model & Segment Mix"
+        content: null
+      - name: "competitive_landscape"
+        title: "Competitive Landscape"
+        content: null
+      - name: "strategic_alignment"
+        title: "Alignment with Strategic Objectives"
+        content: null
+  
+  - name: "leadership_analysis"
+    title: "Leadership Analysis"
+    content: null
+    subsections:
+      - name: "current_structure"
+        title: "Current Leadership Structure"
+        content: null
+      - name: "leadership_styles"
+        title: "Leadership Styles Assessment"
+        content: null
+      - name: "communication_patterns"
+        title: "Communication Patterns"
+        content: null
+  
+  - name: "findings"
+    title: "Findings & Insights"
+    content: null
+    subsections:
+      - name: "key_strengths"
+        title: "Key Strengths"
+        content: null
+      - name: "improvement_areas"
+        title: "Areas for Improvement"
+        content: null
+      - name: "cultural_considerations"
+        title: "Cultural Considerations"
+        content: null
+  
+  - name: "recommendations"
+    title: "Recommendations"
+    content: null
+    subsections:
+      - name: "short_term"
+        title: "Short-term Actions"
+        content: null
+      - name: "long_term"
+        title: "Long-term Strategic Changes"
+        content: null
+      - name: "implementation"
+        title: "Implementation Timeline"
+        content: null
+  
+  - name: "conclusion"
+    title: "Conclusion"
+    content: "The analysis reveals significant opportunities for leadership development within the organization, with focused interventions likely to yield measurable improvements in team performance and organizational effectiveness."
+    subsections: []
+
+# Optional: Define specific references (remove to use placeholder)
+references:
+  - "Bass, B. M., & Riggio, R. E. (2006). \\textit{Transformational Leadership}. Lawrence Erlbaum Associates."
+  - "Northouse, P. G. (2019). \\textit{Leadership: Theory and Practice} (8th ed.). Sage Publications."
+  - "Kouzes, J. M., & Posner, B. Z. (2017). \\textit{The Leadership Challenge: How to Make Extraordinary Things Happen in Organizations} (6th ed.). Jossey-Bass."
+
+# Optional: Define appendices (remove to use default)
+appendices:
+  - title: "Interview Transcripts"
+    content: null
+  - title: "Survey Results"
+    content: null
+  - title: "Organizational Charts"
+    content: null

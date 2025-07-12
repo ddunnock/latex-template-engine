@@ -129,6 +129,56 @@ pdflatex my-document.tex
 pdflatex my-document.tex
 ```
 
+## Project Organization
+
+The template engine supports organized project structures for different courses and semesters:
+
+### Folder Structure
+
+```
+projects/
+├── uccs-me-syse/           # UCCS ME-SYSE program documents
+│   └── classes/
+│       └── EMGT5510/       # Leadership for Engineers
+│           └── 2025_summer/
+│               ├── assets/  # Symlink to root assets/ folder
+│               ├── *.tex    # Generated LaTeX files
+│               └── *.pdf    # Compiled PDFs
+└── [other-courses]/        # Future courses
+```
+
+### UCCS Workflow
+
+For UCCS ME-SYSE students, use the specialized workflow:
+
+```bash
+# Generate documents with proper naming and organization
+latex-engine uccs-workflow
+```
+
+This command will:
+1. Prompt for module number, assignment type, and title
+2. Create the proper folder structure
+3. Set up asset symlinks automatically
+4. Generate the LaTeX document using your chosen template
+5. Compile to PDF
+6. Optionally open the result
+
+### Manual Compilation
+
+You can also compile existing LaTeX files:
+
+```bash
+# Compile with tectonic (default)
+latex-engine compile path/to/file.tex
+
+# Compile with different engine
+latex-engine compile path/to/file.tex --engine=xelatex
+
+# Compile and open PDF
+latex-engine compile path/to/file.tex --open
+```
+
 ## Common Workflows
 
 ### Academic Report Workflow
