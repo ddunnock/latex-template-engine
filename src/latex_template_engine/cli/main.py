@@ -390,9 +390,9 @@ def compile(tex_file: Path, engine: str, open: bool, auto_fallback: bool) -> Non
 
     if auto_fallback:
         # Try engines in order of preference with fallback
-        # Tectonic can handle full paths, others need just the filename
+        # All engines use just the filename when running from the file's directory
         engines = [
-            ("tectonic", ["tectonic", str(tex_file)]),
+            ("tectonic", ["tectonic", tex_file.name]),
             ("xelatex", ["xelatex", "-interaction=nonstopmode", tex_file.name]),
             ("pdflatex", ["pdflatex", "-interaction=nonstopmode", tex_file.name]),
             ("lualatex", ["lualatex", "-interaction=nonstopmode", tex_file.name]),
@@ -459,9 +459,9 @@ def compile(tex_file: Path, engine: str, open: bool, auto_fallback: bool) -> Non
             console.print(f"[blue]Compiling {tex_file} with {engine}...[/blue]")
 
             # Define command for selected engine
-            # Tectonic can handle full paths, others need just the filename
+            # All engines use just the filename when running from the file's directory
             if engine == "tectonic":
-                command = ["tectonic", str(tex_file)]
+                command = ["tectonic", tex_file.name]
             else:
                 command = [engine, "-interaction=nonstopmode", tex_file.name]
 
