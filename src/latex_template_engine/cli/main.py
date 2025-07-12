@@ -390,17 +390,18 @@ def compile(tex_file: Path, engine: str, open: bool, auto_fallback: bool) -> Non
 
     if auto_fallback:
         # Try engines in order of preference with fallback
+        # Tectonic can handle full paths, others need just the filename
         engines = [
             ("tectonic", ["tectonic", str(tex_file)]),
-            ("xelatex", ["xelatex", "-interaction=nonstopmode", str(tex_file)]),
-            ("pdflatex", ["pdflatex", "-interaction=nonstopmode", str(tex_file)]),
-            ("lualatex", ["lualatex", "-interaction=nonstopmode", str(tex_file)]),
+            ("xelatex", ["xelatex", "-interaction=nonstopmode", tex_file.name]),
+            ("pdflatex", ["pdflatex", "-interaction=nonstopmode", tex_file.name]),
+            ("lualatex", ["lualatex", "-interaction=nonstopmode", tex_file.name]),
         ]
 
         # Move selected engine to front if it's not tectonic
         if engine != "tectonic":
             engines = [
-                (engine, [engine, "-interaction=nonstopmode", str(tex_file)])
+                (engine, [engine, "-interaction=nonstopmode", tex_file.name])
             ] + engines
             # Remove duplicate
             engines = list(dict.fromkeys(engines))
@@ -458,10 +459,11 @@ def compile(tex_file: Path, engine: str, open: bool, auto_fallback: bool) -> Non
             console.print(f"[blue]Compiling {tex_file} with {engine}...[/blue]")
 
             # Define command for selected engine
+            # Tectonic can handle full paths, others need just the filename
             if engine == "tectonic":
                 command = ["tectonic", str(tex_file)]
             else:
-                command = [engine, "-interaction=nonstopmode", str(tex_file)]
+                command = [engine, "-interaction=nonstopmode", tex_file.name]
 
             # Run the compilation command
             result = subprocess.run(
