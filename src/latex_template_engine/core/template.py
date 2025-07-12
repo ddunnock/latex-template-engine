@@ -29,7 +29,9 @@ class Template:
     """
 
     def __init__(
-        self, jinja_template: Jinja2Template, config: Optional[TemplateConfig] = None
+        self,
+        jinja_template: Jinja2Template,
+        config: Optional[TemplateConfig] = None,
     ):
         """Initialize a Template.
 

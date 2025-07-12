@@ -10,11 +10,15 @@ Template File Convention:
     them from regular LaTeX files and clearly indicate they are templates.
 
 Components:
-    TemplateEngine: Provides methods for loading, listing, and rendering templates and manages template configurations.
-    Template: Represents individual templates and provides rendering capabilities.
+    TemplateEngine: Provides methods for loading, listing, and rendering
+        templates and manages template configurations.
+    Template: Represents individual templates and provides rendering
+        capabilities.
 
 Usage:
-    Initialize a TemplateEngine to manage your templates directory and perform operations like listing available templates, loading specific templates, and generating LaTeX documents.
+    Initialize a TemplateEngine to manage your templates directory and
+    perform operations like listing available templates, loading specific
+    templates, and generating LaTeX documents.
 
 Example:
     from pathlib import Path
@@ -28,7 +32,6 @@ from typing import Any, Dict, List, Optional
 
 import yaml
 from jinja2 import Environment, FileSystemLoader
-from jinja2 import Template as Jinja2Template
 from pydantic import ValidationError
 
 from ..config.schema import TemplateConfig
@@ -53,14 +56,14 @@ class TemplateEngine:
                           defaults to a 'templates' directory relative to
                           the package root.
         """
-        self.template_dir = (
-            template_dir or Path(__file__).parent.parent.parent.parent / "templates"
-        )
+        if template_dir:
+            self.template_dir = template_dir
+        else:
+            package_root = Path(__file__).parent.parent.parent.parent
+            self.template_dir = package_root / "templates"
         # Setup Jinja2 environment with custom delimiters to avoid conflicts
         self.env = Environment(
-            loader=FileSystemLoader(
-                str(self.template_dir)
-            ),  # Directory for Jinja2 to search for templates
+            loader=FileSystemLoader(str(self.template_dir)),
             block_start_string="<%",
             block_end_string="%>",
             variable_start_string="<<",
@@ -78,15 +81,18 @@ class TemplateEngine:
         file extension) and its corresponding configuration file (.yaml).
 
         Args:
-            template_name: Name of the template file (without .tex.j2 extension)
+            template_name: Name of the template file (without .tex.j2
+                           extension)
 
         Returns:
             Template: A template object that wraps the Jinja2 template
-                      and its associated configuration
+                and its associated configuration
 
         Raises:
-            FileNotFoundError: If the template file is not found in the directory.
-            ValueError: If the configuration file is invalid or cannot be parsed.
+            FileNotFoundError: If the template file is not found in the
+                directory.
+            ValueError: If the configuration file is invalid or cannot be
+                parsed.
         """
         # Locate template and configuration paths
         template_path = self.template_dir / f"{template_name}.tex.j2"
@@ -142,8 +148,10 @@ class TemplateEngine:
 
         Args:
             template_name: Name of the template to use
-            variables: Variables to pass to the template for dynamic rendering
-            output_path: Optional filesystem path to save the generated document
+            variables: Variables to pass to the template for dynamic
+                rendering
+            output_path: Optional filesystem path to save the generated
+                document
 
         Returns:
             str: The generated LaTeX content
@@ -154,7 +162,8 @@ class TemplateEngine:
         # Render template with the given variables
         content = template.render(variables)
 
-        # If an output path is provided, write the generated content to the file
+        # If an output path is provided, write the generated content to
+        # the file
         if output_path:
             output_path.write_text(content)
 
@@ -170,7 +179,8 @@ class TemplateEngine:
         optionally provide an associated configuration in YAML format.
 
         Args:
-            name: Base filename for the new template (without .tex.j2 extension)
+            name: Base filename for the new template (without .tex.j2
+                extension)
             content: String content of the Jinja2 template
             config: Optional configuration object for the template
                      defining variables and structure

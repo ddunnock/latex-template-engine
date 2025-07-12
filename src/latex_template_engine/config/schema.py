@@ -21,7 +21,7 @@ Example:
 """
 
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -89,7 +89,8 @@ class SectionConfig(BaseModel):
     Attributes:
         name: Internal name identifier for the section
         title: Display title for the section in the document
-        template_file: Optional path to a specific template file for the section
+        template_file: Optional path to a specific template file for the
+            section
         fields: List of fields applicable to the section
         optional: Whether the section is optional in the document
     """
@@ -123,7 +124,8 @@ class TemplateConfig(BaseModel):
         document_class: The LaTeX class used for the main document
         class_options: Options passed to the LaTeX document class
         tags: Keywords associated with the template for organization
-        preview_image: Optional path to a preview image representing the template
+        preview_image: Optional path to a preview image representing the
+            template
     """
 
     name: str = Field(..., description="Template name")
@@ -163,8 +165,10 @@ class TemplateConfig(BaseModel):
     def model_dump_yaml(self) -> str:
         """Export as YAML string.
 
-        Uses the PyYAML library to convert the template configuration into a YAML-formatted
-        string. This method is useful for serializing the config model when creating or
+        Uses the PyYAML library to convert the template configuration into a
+        YAML-formatted
+        string. This method is useful for serializing the config model when
+        creating or
         updating template configuration files.
 
         Returns:

@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pytest
 
-from latex_template_engine.config.schema import TemplateConfig
 from latex_template_engine.core.engine import TemplateEngine
 
 

@@ -140,7 +140,7 @@ def generate(
 
     try:
         # Generate the document
-        content = engine.generate_document(template_name, vars_dict, output_path)
+        engine.generate_document(template_name, vars_dict, output_path)
         console.print(f"[green]Generated document: {output_path}[/green]")
     except FileNotFoundError as e:
         console.print(f"[red]Error: {e}[/red]")
@@ -215,7 +215,8 @@ def info(template_name: str, template_dir: Optional[Path]):
                 console.print(fields_table)
         else:
             console.print(
-                f"[yellow]Template {template_name} has no configuration file.[/yellow]"
+                f"[yellow]Template {template_name} has no configuration "
+                f"file.[/yellow]"
             )
 
     except FileNotFoundError as e:
@@ -248,7 +249,8 @@ def init(template_dir: Optional[Path]):
     template_dir.mkdir(exist_ok=True)
 
     # Define an example LaTeX template
-    example_template = r"""\documentclass[<<document_class_options>>]{<<document_class>>}
+    example_template = r"""\documentclass[<<document_class_options>>]{<<\
+        document_class>>}
 
 <% for package in packages %>
 \usepackage{<<package>>}
@@ -294,8 +296,18 @@ def init(template_dir: Optional[Path]):
                 "label": "Document Title",
                 "required": True,
             },
-            {"name": "author", "type": "string", "label": "Author", "required": True},
-            {"name": "date", "type": "date", "label": "Date", "default": "\\today"},
+            {
+                "name": "author",
+                "type": "string",
+                "label": "Author",
+                "required": True,
+            },
+            {
+                "name": "date",
+                "type": "date",
+                "label": "Date",
+                "default": "\\today",
+            },
             {
                 "name": "abstract",
                 "type": "string",
@@ -316,14 +328,14 @@ def init(template_dir: Optional[Path]):
     )
 
     # Save the example config to a YAML file
-    (template_dir / "example.yaml").write_text(example_config.model_dump_yaml())
+    config_file = template_dir / "example.yaml"
+    config_file.write_text(example_config.model_dump_yaml())
 
     # Confirm creation with console output
     console.print(f"[green]Initialized template directory: {template_dir}[/green]")
-    console.print(
-        f"[dim]Created example template: {template_dir / 'example.tex.j2'}[/dim]"
-    )
-    console.print(f"[dim]Created example config: {template_dir / 'example.yaml'}[/dim]")
+    template_file = template_dir / "example.tex.j2"
+    console.print(f"[dim]Created example template: {template_file}[/dim]")
+    console.print(f"[dim]Created example config: {config_file}[/dim]")
 
 
 def main():

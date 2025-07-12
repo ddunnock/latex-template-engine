@@ -2,8 +2,8 @@
 
 A modern LaTeX template engine with Jinja2 templating and editor integrations.
 
-This package provides a comprehensive solution for generating LaTeX documents from
-Jinja2 templates with support for:
+This package provides a comprehensive solution for generating LaTeX
+documents from Jinja2 templates with support for:
 - Dynamic template variables and configuration
 - Structured document sections and hierarchies
 - Editor integrations for Neovim and VS Code
@@ -23,9 +23,7 @@ Example:
 # Package metadata
 __version__ = "0.1.0"
 __author__ = "David Dunnock"
-__description__ = (
-    "LaTeX template engine with Jinja2 and editor integrations"
-)
+__description__ = "LaTeX template engine with Jinja2 and editor integrations"
 
 from .config.schema import TemplateConfig
 
