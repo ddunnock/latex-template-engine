@@ -475,22 +475,20 @@ class InteractiveSession:
     def _generate_document(self, template_name: str) -> None:
         """Generate the final LaTeX document."""
         try:
-            # Generate output filename
-            output_name = (
-                self.user_data.get("title", "document").lower().replace(" ", "_")
-            )
-            output_path = Path(f"{output_name}.tex")
+            # Determine output path based on template type
+            output_path = self._get_output_path(template_name)
 
             # Check if file exists
             if output_path.exists():
                 if not Confirm.ask(
                     f"File {output_path} exists. Overwrite?", default=False
                 ):
-                    output_path = Path(
-                        Prompt.ask(
-                            "Enter new filename", default=f"{output_name}_new.tex"
-                        )
+                    output_name = (
+                        self.user_data.get("title", "document")
+                        .lower()
+                        .replace(" ", "_")
                     )
+                    output_path = output_path.parent / f"{output_name}_new.tex"
 
             # Merge template variables with user data
             # User data takes precedence over template defaults
@@ -508,6 +506,71 @@ class InteractiveSession:
 
         except Exception as e:
             self.console.print(f"[red]Error generating document: {e}[/red]")
+
+    def _get_output_path(self, template_name: str) -> Path:
+        """Determine the appropriate output path based on template and user data."""
+        # Check if this is a UCCS homework/report template
+        if self._is_uccs_template(template_name):
+            return self._get_uccs_output_path()
+        else:
+            # Default behavior for other templates
+            output_name = (
+                self.user_data.get("title", "document").lower().replace(" ", "_")
+            )
+            return Path(f"{output_name}.tex")
+
+    def _is_uccs_template(self, template_name: str) -> bool:
+        """Check if this is a UCCS template."""
+        uccs_templates = ["homework", "report", "uccs_report"]
+        return template_name in uccs_templates
+
+    def _get_uccs_output_path(self) -> Path:
+        """Generate UCCS-style output path with proper folder structure."""
+        # Create the UCCS project structure
+        base_path = Path.cwd() / "projects/uccs-me-syse/classes/EMGT5510/2025_summer"
+        base_path.mkdir(parents=True, exist_ok=True)
+
+        # Create symlink to assets if it doesn't exist
+        assets_link = base_path / "assets"
+        if not assets_link.exists():
+            assets_source = Path.cwd() / "assets"
+            if assets_source.exists():
+                assets_link.symlink_to(assets_source)
+                self.console.print("[dim]Created assets symlink[/dim]")
+
+        # Generate filename based on user data
+        # Use nested data structure for assignment fields
+        assignment = self.user_data.get("assignment", {})
+        module = assignment.get("number", "unknown")
+        assignment_title = assignment.get("title", "assignment")
+
+        # Clean up the assignment title for filename
+        safe_title = assignment_title.lower().replace(" ", "").replace(".", "")
+
+        # Try to extract assignment type from title or user data
+        assignment_type = self._determine_assignment_type(assignment_title)
+
+        # Generate filename: EMGT5510_Module-14_casestudy14.1.tex
+        filename = f"EMGT5510_Module-{module}_{assignment_type}{safe_title}"
+
+        return base_path / f"{filename}.tex"
+
+    def _determine_assignment_type(self, title: str) -> str:
+        """Determine assignment type from title."""
+        title_lower = title.lower()
+
+        if "case study" in title_lower or "casestudy" in title_lower:
+            return "casestudy"
+        elif "homework" in title_lower or "hw" in title_lower:
+            return "homework"
+        elif "assignment" in title_lower:
+            return "assignment"
+        elif "report" in title_lower:
+            return "report"
+        elif "project" in title_lower:
+            return "project"
+        else:
+            return "assignment"
 
     def _compile_document(self, tex_path: Path) -> None:
         """Compile the LaTeX document using available engines."""
