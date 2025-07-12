@@ -24,7 +24,19 @@ Usage:
 """
 
 # Import all configuration models and enums
-from .schema import TemplateConfig, TemplateField, SectionConfig, DocumentType, FieldType
+from .schema import (
+    DocumentType,
+    FieldType,
+    SectionConfig,
+    TemplateConfig,
+    TemplateField,
+)
 
 # Define public API for the config module
-__all__ = ["TemplateConfig", "TemplateField", "SectionConfig", "DocumentType", "FieldType"]
+__all__ = [
+    "TemplateConfig",
+    "TemplateField",
+    "SectionConfig",
+    "DocumentType",
+    "FieldType",
+]

@@ -18,21 +18,22 @@ The CLI is designed to be user-friendly with:
 - Support for both YAML and JSON variable files
 """
 
+import json
 from pathlib import Path
 from typing import Optional
-import json
-import yaml
 
 # Click for command-line interface functionality
 import click
+import yaml
+
 # Rich for enhanced console output
 from rich.console import Console
 from rich.table import Table
-from rich.text import Text
+
+from ..config.schema import TemplateConfig
 
 # Import core engine and configuration components
 from ..core.engine import TemplateEngine
-from ..config.schema import TemplateConfig
 
 # Initialize Rich console for formatted output
 console = Console()
@@ -42,7 +43,7 @@ console = Console()
 @click.version_option()
 def cli():
     """LaTeX Template Engine - Generate LaTeX documents from Jinja2 templates.
-    
+
     This is the main CLI entry point that sets up the command group.
     All subcommands are registered under this group.
     """
@@ -50,14 +51,18 @@ def cli():
 
 
 @cli.command()
-@click.option('--template-dir', '-t', type=click.Path(exists=True, path_type=Path),
-              help='Directory containing templates')
+@click.option(
+    "--template-dir",
+    "-t",
+    type=click.Path(exists=True, path_type=Path),
+    help="Directory containing templates",
+)
 def list_templates(template_dir: Optional[Path]):
     """List all available templates.
-    
+
     Scans the template directory for .tex files and displays them in a
     formatted table showing template names and their full paths.
-    
+
     Args:
         template_dir: Optional directory to search for templates.
                      If not provided, uses the default template directory.
@@ -65,35 +70,47 @@ def list_templates(template_dir: Optional[Path]):
     # Initialize the template engine with the specified or default directory
     engine = TemplateEngine(template_dir)
     templates = engine.list_templates()
-    
+
     # Handle case where no templates are found
     if not templates:
         console.print("[yellow]No templates found.[/yellow]")
         return
-    
+
     # Create and populate a Rich table for template display
     table = Table(title="Available Templates")
     table.add_column("Name", style="cyan")
     table.add_column("Path", style="dim")
-    
+
     # Add each template to the table
     for template in templates:
         template_path = engine.template_dir / f"{template}.tex.j2"
         table.add_row(template, str(template_path))
-    
+
     # Display the table using Rich console
     console.print(table)
 
 
 @cli.command()
-@click.argument('template_name')
-@click.argument('output_path', type=click.Path(path_type=Path))
-@click.option('--variables', '-v', type=click.Path(exists=True, path_type=Path),
-              help='YAML/JSON file containing template variables')
-@click.option('--template-dir', '-t', type=click.Path(exists=True, path_type=Path),
-              help='Directory containing templates')
-def generate(template_name: str, output_path: Path, variables: Optional[Path], 
-             template_dir: Optional[Path]):
+@click.argument("template_name")
+@click.argument("output_path", type=click.Path(path_type=Path))
+@click.option(
+    "--variables",
+    "-v",
+    type=click.Path(exists=True, path_type=Path),
+    help="YAML/JSON file containing template variables",
+)
+@click.option(
+    "--template-dir",
+    "-t",
+    type=click.Path(exists=True, path_type=Path),
+    help="Directory containing templates",
+)
+def generate(
+    template_name: str,
+    output_path: Path,
+    variables: Optional[Path],
+    template_dir: Optional[Path],
+):
     """Generate a LaTeX document from a template.
 
     This command generates a LaTeX document by applying the specified
@@ -108,19 +125,19 @@ def generate(template_name: str, output_path: Path, variables: Optional[Path],
     """
     # Initialize engine with given or default template directory
     engine = TemplateEngine(template_dir)
-    
+
     # Load variables from file if provided
     vars_dict = {}
     if variables:
-        if variables.suffix.lower() in ['.yaml', '.yml']:
-            with open(variables, 'r') as f:
+        if variables.suffix.lower() in [".yaml", ".yml"]:
+            with open(variables, "r") as f:
                 vars_dict = yaml.safe_load(f)
-        elif variables.suffix.lower() == '.json':
-            with open(variables, 'r') as f:
+        elif variables.suffix.lower() == ".json":
+            with open(variables, "r") as f:
                 vars_dict = json.load(f)
         else:
             raise click.BadParameter("Variables file must be YAML or JSON")
-    
+
     try:
         # Generate the document
         content = engine.generate_document(template_name, vars_dict, output_path)
@@ -134,9 +151,13 @@ def generate(template_name: str, output_path: Path, variables: Optional[Path],
 
 
 @cli.command()
-@click.argument('template_name')
-@click.option('--template-dir', '-t', type=click.Path(exists=True, path_type=Path),
-              help='Directory containing templates')
+@click.argument("template_name")
+@click.option(
+    "--template-dir",
+    "-t",
+    type=click.Path(exists=True, path_type=Path),
+    help="Directory containing templates",
+)
 def info(template_name: str, template_dir: Optional[Path]):
     """Show information about a template.
 
@@ -149,30 +170,30 @@ def info(template_name: str, template_dir: Optional[Path]):
     """
     # Initialize the template engine
     engine = TemplateEngine(template_dir)
-    
+
     try:
         # Load the specified template
         template = engine.load_template(template_name)
-        
+
         # Check if the template configuration exists
         if template.config:
             config = template.config
-            
+
             # Create and populate a Rich table for template metadata
             table = Table(title=f"Template: {config.name}")
             table.add_column("Property", style="cyan")
             table.add_column("Value", style="white")
-            
+
             # Add template metadata to the table
             table.add_row("Description", config.description)
             table.add_row("Document Type", config.document_type)
             table.add_row("Version", config.version)
             if config.author:
                 table.add_row("Author", config.author)
-            
+
             # Display the metadata table
             console.print(table)
-            
+
             # If fields exist, create and display a table for them
             if config.fields:
                 fields_table = Table(title="Template Fields")
@@ -180,29 +201,35 @@ def info(template_name: str, template_dir: Optional[Path]):
                 fields_table.add_column("Type", style="yellow")
                 fields_table.add_column("Required", style="red")
                 fields_table.add_column("Description", style="dim")
-                
+
                 # Populate the fields table
                 for field in config.fields:
                     fields_table.add_row(
                         field.name,
                         field.type,
                         "Yes" if field.required else "No",
-                        field.description or ""
+                        field.description or "",
                     )
-                
+
                 # Display the fields table
                 console.print(fields_table)
         else:
-            console.print(f"[yellow]Template {template_name} has no configuration file.[/yellow]")
-            
+            console.print(
+                f"[yellow]Template {template_name} has no configuration file.[/yellow]"
+            )
+
     except FileNotFoundError as e:
         console.print(f"[red]Error: {e}[/red]")
         raise click.Abort()
 
 
 @cli.command()
-@click.option('--template-dir', '-t', type=click.Path(path_type=Path),
-              help='Directory to create templates in')
+@click.option(
+    "--template-dir",
+    "-t",
+    type=click.Path(path_type=Path),
+    help="Directory to create templates in",
+)
 def init(template_dir: Optional[Path]):
     """Initialize a new template directory with examples.
 
@@ -216,12 +243,12 @@ def init(template_dir: Optional[Path]):
     # Default to creating a 'templates' directory if none is specified
     if template_dir is None:
         template_dir = Path.cwd() / "templates"
-    
+
     # Ensure the directory exists
     template_dir.mkdir(exist_ok=True)
-    
+
     # Define an example LaTeX template
-    example_template = r'''\documentclass[<<document_class_options>>]{<<document_class>>}
+    example_template = r"""\documentclass[<<document_class_options>>]{<<document_class>>}
 
 <% for package in packages %>
 \usepackage{<<package>>}
@@ -249,11 +276,11 @@ def init(template_dir: Optional[Path]):
 <<section.content>>
 <% endfor %>
 
-\end{document}'''
-    
+\end{document}"""
+
     # Save the example template to a file
     (template_dir / "example.tex.j2").write_text(example_template)
-    
+
     # Define an example configuration
     example_config = TemplateConfig(
         name="Example Template",
@@ -261,24 +288,41 @@ def init(template_dir: Optional[Path]):
         document_type="article",
         author="LaTeX Template Engine",
         fields=[
-            {"name": "title", "type": "string", "label": "Document Title", "required": True},
+            {
+                "name": "title",
+                "type": "string",
+                "label": "Document Title",
+                "required": True,
+            },
             {"name": "author", "type": "string", "label": "Author", "required": True},
             {"name": "date", "type": "date", "label": "Date", "default": "\\today"},
-            {"name": "abstract", "type": "string", "label": "Abstract", "required": False},
-            {"name": "introduction", "type": "string", "label": "Introduction", "required": True},
+            {
+                "name": "abstract",
+                "type": "string",
+                "label": "Abstract",
+                "required": False,
+            },
+            {
+                "name": "introduction",
+                "type": "string",
+                "label": "Introduction",
+                "required": True,
+            },
         ],
         packages=["geometry", "amsmath", "amsfonts"],
         document_class="article",
         class_options=["12pt", "letterpaper"],
-        tags=["academic", "article", "example"]
+        tags=["academic", "article", "example"],
     )
-    
+
     # Save the example config to a YAML file
     (template_dir / "example.yaml").write_text(example_config.model_dump_yaml())
-    
+
     # Confirm creation with console output
     console.print(f"[green]Initialized template directory: {template_dir}[/green]")
-    console.print(f"[dim]Created example template: {template_dir / 'example.tex.j2'}[/dim]")
+    console.print(
+        f"[dim]Created example template: {template_dir / 'example.tex.j2'}[/dim]"
+    )
     console.print(f"[dim]Created example config: {template_dir / 'example.yaml'}[/dim]")
 
 
@@ -292,6 +336,6 @@ def main():
     cli()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Executes the CLI when the module is run as a script
     main()

@@ -24,10 +24,11 @@ Example:
 """
 
 from pathlib import Path
-from typing import Dict, Any, Optional, List
-import yaml
+from typing import Any, Dict, List, Optional
 
-from jinja2 import Environment, FileSystemLoader, Template as Jinja2Template
+import yaml
+from jinja2 import Environment, FileSystemLoader
+from jinja2 import Template as Jinja2Template
 from pydantic import ValidationError
 
 from ..config.schema import TemplateConfig
@@ -43,27 +44,31 @@ class TemplateEngine:
     - Validating template configurations using Pydantic schemas
     - Managing template directory paths and structures
     """
-    
+
     def __init__(self, template_dir: Optional[Path] = None):
         """Initialize the template engine.
-        
+
         Args:
             template_dir: Directory containing Jinja2 templates. If None,
                           defaults to a 'templates' directory relative to
                           the package root.
         """
-        self.template_dir = template_dir or Path(__file__).parent.parent.parent.parent / "templates"
+        self.template_dir = (
+            template_dir or Path(__file__).parent.parent.parent.parent / "templates"
+        )
         # Setup Jinja2 environment with custom delimiters to avoid conflicts
         self.env = Environment(
-            loader=FileSystemLoader(str(self.template_dir)),  # Directory for Jinja2 to search for templates
-            block_start_string='<%',
-            block_end_string='%>',
-            variable_start_string='<<',
-            variable_end_string='>>',
-            comment_start_string='<#',
-            comment_end_string='#>',
-            trim_blocks=True,        # Remove trailing newlines after blocks
-            lstrip_blocks=True       # Strip leading spaces on block lines
+            loader=FileSystemLoader(
+                str(self.template_dir)
+            ),  # Directory for Jinja2 to search for templates
+            block_start_string="<%",
+            block_end_string="%>",
+            variable_start_string="<<",
+            variable_end_string=">>",
+            comment_start_string="<#",
+            comment_end_string="#>",
+            trim_blocks=True,  # Remove trailing newlines after blocks
+            lstrip_blocks=True,  # Strip leading spaces on block lines
         )
 
     def load_template(self, template_name: str) -> Template:
@@ -97,7 +102,7 @@ class TemplateEngine:
         # Attempt to load and validate configuration file, if present
         config = None
         if config_path.exists():
-            with open(config_path, 'r') as f:
+            with open(config_path, "r") as f:
                 config_data = yaml.safe_load(f)
                 try:
                     config = TemplateConfig(**config_data)
@@ -119,7 +124,7 @@ class TemplateEngine:
         templates = []
         for file_path in self.template_dir.glob("*.tex.j2"):
             # Extract filename without .tex.j2 extension
-            template_name = file_path.name.replace('.tex.j2', '')
+            template_name = file_path.name.replace(".tex.j2", "")
             templates.append(template_name)
         return sorted(templates)
 
@@ -127,7 +132,7 @@ class TemplateEngine:
         self,
         template_name: str,
         variables: Dict[str, Any],
-        output_path: Optional[Path] = None
+        output_path: Optional[Path] = None,
     ) -> str:
         """Generate a LaTeX document from a template.
 
@@ -145,7 +150,7 @@ class TemplateEngine:
         """
         # Load the template
         template = self.load_template(template_name)
-        
+
         # Render template with the given variables
         content = template.render(variables)
 
@@ -157,10 +162,7 @@ class TemplateEngine:
         return content
 
     def create_template(
-        self,
-        name: str,
-        content: str,
-        config: Optional[TemplateConfig] = None
+        self, name: str, content: str, config: Optional[TemplateConfig] = None
     ) -> None:
         """Create a new template.
 

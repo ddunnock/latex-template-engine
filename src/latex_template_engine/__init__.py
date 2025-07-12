@@ -23,12 +23,15 @@ Example:
 # Package metadata
 __version__ = "0.1.0"
 __author__ = "David Dunnock"
-__description__ = "LaTeX template engine with Jinja2 and editor integrations"
+__description__ = (
+    "LaTeX template engine with Jinja2 and editor integrations"
+)
+
+from .config.schema import TemplateConfig
 
 # Core imports - these are the main public API components
 from .core.engine import TemplateEngine
 from .core.template import Template
-from .config.schema import TemplateConfig
 
 # Define what gets imported with 'from latex_template_engine import *'
 __all__ = ["TemplateEngine", "Template", "TemplateConfig"]

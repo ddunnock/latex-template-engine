@@ -12,7 +12,7 @@ The CLI offers functionality for:
 
 Components:
     main: Entry point function for the CLI application
-    
+
 The CLI is built using Click for command parsing and Rich for enhanced
 output formatting, providing a modern and user-friendly terminal experience.
 """
