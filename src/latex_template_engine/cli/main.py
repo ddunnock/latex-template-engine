@@ -39,6 +39,28 @@ from ..interactive import InteractiveSession
 console = Console()
 
 
+def _open_pdf(pdf_path: Path) -> None:
+    """Open PDF file with the system default viewer."""
+    import platform
+    import subprocess
+
+    try:
+        system = platform.system()
+        if system == "Darwin":  # macOS
+            subprocess.run(["open", str(pdf_path)])
+        elif system == "Windows":
+            subprocess.run(["start", str(pdf_path)], shell=True)
+        elif system == "Linux":
+            subprocess.run(["xdg-open", str(pdf_path)])
+        else:
+            console.print(f"[yellow]Please open {pdf_path} manually[/yellow]")
+    except Exception as e:
+        console.print(
+            f"[yellow]Could not open PDF automatically: {e}[/yellow]\n"
+            f"[dim]PDF location: {pdf_path}[/dim]"
+        )
+
+
 @click.group()
 @click.version_option()
 def cli() -> None:
@@ -348,7 +370,13 @@ def uccs_workflow(module: str, type: str, title: str) -> None:
     is_flag=True,
     help="Open the generated PDF after compilation",
 )
-def compile(tex_file: Path, engine: str, open: bool) -> None:
+@click.option(
+    "--auto-fallback",
+    "-a",
+    is_flag=True,
+    help="Automatically try other engines if the selected one fails",
+)
+def compile(tex_file: Path, engine: str, open: bool, auto_fallback: bool) -> None:
     """Compile a LaTeX file to PDF.
 
     Args:
@@ -358,32 +386,117 @@ def compile(tex_file: Path, engine: str, open: bool) -> None:
     """
     import subprocess
 
-    # Change to the directory containing the LaTeX file
-    tex_dir = tex_file.parent
-    tex_filename = tex_file.name
-    pdf_file = tex_dir / f"{tex_file.stem}.pdf"
+    pdf_file = tex_file.with_suffix(".pdf")
 
-    console.print(f"[blue]Compiling {tex_filename} with {engine}...[/blue]")
+    if auto_fallback:
+        # Try engines in order of preference with fallback
+        engines = [
+            ("tectonic", ["tectonic", str(tex_file)]),
+            ("xelatex", ["xelatex", "-interaction=nonstopmode", str(tex_file)]),
+            ("pdflatex", ["pdflatex", "-interaction=nonstopmode", str(tex_file)]),
+            ("lualatex", ["lualatex", "-interaction=nonstopmode", str(tex_file)]),
+        ]
 
-    # Compile based on chosen engine
-    if engine == "tectonic":
-        result = subprocess.run(
-            ["tectonic", str(tex_file)], capture_output=True, text=True, cwd=tex_dir
+        # Move selected engine to front if it's not tectonic
+        if engine != "tectonic":
+            engines = [
+                (engine, [engine, "-interaction=nonstopmode", str(tex_file)])
+            ] + engines
+            # Remove duplicate
+            engines = list(dict.fromkeys(engines))
+
+        # Try each engine until one works
+        for engine_name, command in engines:
+            try:
+                console.print(
+                    f"[blue]Compiling {tex_file} with {engine_name}...[/blue]"
+                )
+                result = subprocess.run(
+                    command, capture_output=True, text=True, cwd=tex_file.parent
+                )
+
+                if result.returncode == 0:
+                    console.print(
+                        f"[green]✓ PDF generated with {engine_name}: {pdf_file}[/green]"
+                    )
+                    if open:
+                        _open_pdf(pdf_file)
+                    return
+                else:
+                    console.print(
+                        f"[yellow]{engine_name} failed, trying next engine...[/yellow]"
+                    )
+                    if engine_name == "tectonic":
+                        console.print(f"[dim]Error: {result.stderr.strip()}[/dim]")
+
+            except FileNotFoundError:
+                console.print(
+                    f"[dim]{engine_name} not found, trying next engine...[/dim]"
+                )
+                continue
+            except Exception as e:
+                console.print(
+                    f"[yellow]{engine_name} error: {e}, trying next engine...[/yellow]"
+                )
+                continue
+
+        # If no engine worked
+        console.print("[red]LaTeX compilation failed with all engines![/red]")
+        console.print(
+            "[yellow]Please install one of the following LaTeX engines:[/yellow]"
         )
-    else:
-        result = subprocess.run(
-            [engine, tex_filename], capture_output=True, text=True, cwd=tex_dir
+        console.print(
+            "  • Tectonic (recommended): https://tectonic-typesetting.github.io/"
         )
-
-    if result.returncode == 0:
-        console.print(f"[green]✓ Generated PDF: {pdf_file}[/green]")
-
-        if open:
-            subprocess.run(["open", str(pdf_file)])
-    else:
-        console.print("[red]Error compiling LaTeX:[/red]")
-        console.print(f"[red]{result.stderr}[/red]")
+        console.print("  • XeLaTeX (supports Unicode): Part of TeX Live/MiKTeX")
+        console.print("  • pdfLaTeX (traditional): Part of TeX Live/MiKTeX")
+        console.print("  • LuaLaTeX (modern): Part of TeX Live/MiKTeX")
         raise click.Abort()
+    else:
+        # Single engine compilation
+        try:
+            console.print(f"[blue]Compiling {tex_file} with {engine}...[/blue]")
+
+            # Define command for selected engine
+            if engine == "tectonic":
+                command = ["tectonic", str(tex_file)]
+            else:
+                command = [engine, "-interaction=nonstopmode", str(tex_file)]
+
+            # Run the compilation command
+            result = subprocess.run(
+                command, capture_output=True, text=True, cwd=tex_file.parent
+            )
+
+            if result.returncode == 0:
+                console.print(f"[green]✓ PDF generated: {pdf_file}[/green]")
+                if open:
+                    _open_pdf(pdf_file)
+            else:
+                console.print(f"[red]Error compiling LaTeX with {engine}![/red]")
+                console.print(f"[dim]{result.stderr.strip()}[/dim]")
+                if engine != "tectonic":
+                    console.print(
+                        "[yellow]Consider trying with --auto-fallback "
+                        "to try other engines.[/yellow]"
+                    )
+                raise click.Abort()
+
+        except FileNotFoundError:
+            console.print(f"[red]LaTeX engine '{engine}' not found.[/red]")
+            console.print(
+                "[yellow]Please ensure the engine is installed and accessible "
+                "in your PATH.[/yellow]"
+            )
+            if not auto_fallback:
+                console.print(
+                    "[yellow]Or use --auto-fallback to try other engines "
+                    "automatically.[/yellow]"
+                )
+            raise click.Abort()
+        except Exception as e:
+            console.print(f"[red]Unexpected error during compilation: {e}[/red]")
+            raise click.Abort()
 
 
 @cli.command()
